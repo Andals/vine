@@ -1,0 +1,46 @@
+vine=$PWD in=tool/in.vim {
+ README.md
+ composer.json
+ src=src {
+  Bootstrap.php
+  Loader.php
+  App=App {
+   Base.php
+   Web.php
+  }
+  Container=Container {
+   Obj.php
+  }
+  Contract=Contract {
+   Container.php
+   Controller.php
+   Request.php
+   Route.php
+   Router.php
+   View.php
+  }
+  Controller=Controller {
+   Base.php
+  }
+  Error=Error {
+   Errno.php
+   Exception.php
+  }
+  Http=Http {
+   Request.php
+  }
+  Routing=Routing {
+   Route.php
+   Router.php
+  }
+  View=View {
+   Base.php
+   Php.php
+  }
+ }
+ tool=tool {
+  in.vim
+  srcindex_cscope.sh
+  srcindex_ctags.sh
+ }
+}
