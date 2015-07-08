@@ -2,36 +2,40 @@
 namespace Vine\Component\View;
 
 /**
-    * This is view base
+ * This is view base
  */
 abstract class Base implements \Vine\Component\View\ViewInterface
 {/*{{{*/
 
     /**
-        * {@inheritdoc}
+     * view root
+     * 
+     * @var string
      */
-	public function setViewRoot($view_root)
-    {/*{{{*/
-    }/*}}}*/
+    protected $viewRoot = '';
 
     /**
-        * {@inheritdoc}
+     * {@inheritdoc}
      */
-	public function assign($key, $value, $secure_filter=true)
-    {/*{{{*/
-    }/*}}}*/
-
+	public function setViewRoot($viewRoot)
+    {
+        $this->viewRoot = rtrim($viewRoot, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+    
     /**
-        * {@inheritdoc}
+     * get template file
+     * 
+     * @param string $tplName
+     * 
+     * @throws \Exception
+     * @return string
      */
-	public function render($tpl_name, $data=array())
-    {/*{{{*/
-    }/*}}}*/
-
-    /**
-        * {@inheritdoc}
-     */
-	public function display($tpl_name, $data=array())
-    {/*{{{*/
-    }/*}}}*/
-}/*}}}*/
+    protected function getTplFile($tplName)
+    {
+        $tplFile = $this->viewRoot . ltrim($tplName, DIRECTORY_SEPARATOR);
+        if (! file_exists($tplFile)) {
+            throw new \Exception('template file ' . $tplFile . ' not exists');
+        }
+        return $tplFile;
+    }
+}
