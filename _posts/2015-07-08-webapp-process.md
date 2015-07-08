@@ -5,4 +5,4 @@ title:  webapp-process
 
 # 流程图
 
-![](/images/vine/webapp-process.png)
+![](/vine/images/webapp-process.png)
