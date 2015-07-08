@@ -19,8 +19,9 @@ interface Controller
         *
         * @param string $actionName
         * @param \Vine\Contract\Request $request
+        * @param \Vine\Contract\Response $response
         *
         * @return 
      */
-    public function dispatch($actionName, \Vine\Contract\Request $request);
+    public function dispatch($actionName, \Vine\Contract\Request $request, \Vine\Contract\Response $response);
 }/*}}}*/

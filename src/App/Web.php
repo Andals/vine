@@ -19,15 +19,16 @@ final class Web extends \Vine\App\Base
      */
     public function run($moduleName)
     {/*{{{*/
-        $request = $this->loader->loadRequest();
-        $route   = $this->loader->loadRouter()->findRoute($request);
+        $request  = $this->loader->loadRequest();
+        $route    = $this->loader->loadRouter()->findRoute($request);
+        $response = $this->loader->loadResponse();
 
         $userDefined = $route->getUserDefined();
         if (is_callable($userDefined)) {
-            call_user_func($userDefined, $request);
+            call_user_func($userDefined, $request, $response);
         } else {
             $controller = $this->loader->loadController($this->appName, $moduleName, $route->getControllerName());
-            $controller->dispatch($route->getActionName(), $request);
+            $controller->dispatch($route->getActionName(), $request, $response);
         }
     }/*}}}*/
 }/*}}}*/

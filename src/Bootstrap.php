@@ -42,4 +42,8 @@ class Bootstrap
     {/*{{{*/
         $loader->setRouter(new \Vine\Routing\Router());
     }/*}}}*/
+    protected function initResponse($loader)
+    {/*{{{*/
+        $loader->setResponse(new \Vine\Http\Response());
+    }/*}}}*/
 }/*}}}*/

@@ -13,8 +13,9 @@ namespace Vine;
  */
 class Loader
 {/*{{{*/
-    const KEY_REQUEST = 'request';
-    const KEY_ROUTER  = 'router';
+    const KEY_REQUEST  = 'request';
+    const KEY_ROUTER   = 'router';
+    const KEY_RESPONSE = 'response';
 
     private $container = null;
 
@@ -61,6 +62,28 @@ class Loader
     public function loadRequest()
     {/*{{{*/
         return $this->container->get(self::KEY_REQUEST);
+    }/*}}}*/
+
+    /**
+        * Set response instance
+        *
+        * @param \Vine\Contract\Response $response
+        *
+        * @return 
+     */
+    public function setResponse(\Vine\Contract\Response $response)
+    {/*{{{*/
+        $this->container->add($response, self::KEY_RESPONSE);
+    }/*}}}*/
+
+    /**
+        * Get response instance
+        *
+        * @return \Vine\Contract\Response
+     */
+    public function loadResponse()
+    {/*{{{*/
+        return $this->container->get(self::KEY_RESPONSE);
     }/*}}}*/
 
     /**
