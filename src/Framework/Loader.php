@@ -16,6 +16,7 @@ class Loader
     const KEY_REQUEST  = 'request';
     const KEY_ROUTER   = 'router';
     const KEY_RESPONSE = 'response';
+    const KEY_VIEW = 'view';
 
     private $container = null;
 
@@ -63,7 +64,7 @@ class Loader
     {/*{{{*/
         return $this->container->get(self::KEY_REQUEST);
     }/*}}}*/
-
+    
     /**
         * Set response instance
         *
@@ -108,6 +109,28 @@ class Loader
         return $this->container->get(self::KEY_ROUTER);
     }/*}}}*/
 
+    /**
+        * Set view instance
+        *
+        * @param \Vine\Component\View\ViewInterface $request
+        *
+        * @return
+     */
+    public function setView(\Vine\Component\View\ViewInterface $view)
+    {/*{{{*/
+        $this->container->add($view, self::KEY_VIEW);
+    }/*}}}*/
+    
+    /**
+        * Get view instance
+        *
+        * @return \Vine\Component\View\ViewInterface
+     */
+    public function loadView()
+    {/*{{{*/
+        return $this->container->get(self::KEY_VIEW);
+    }/*}}}*/
+    
     /**
         * Load controller instance
         *

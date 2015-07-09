@@ -1,6 +1,6 @@
 <?php
 
-namespace Vine\View;
+namespace Vine\Component\View;
 
 class Simple extends Base
 {
