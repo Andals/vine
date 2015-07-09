@@ -6,12 +6,12 @@
 * @date 2015-07-05
  */
 
-namespace Vine\Routing;
+namespace Vine\Component\Routing;
 
 /**
     * Mvc or user defined
  */
-class Route implements \Vine\Contract\Route
+class Route implements \Vine\Component\Routing\RouteInterface
 {/*{{{*/
     private $controllerName = '';
     private $actionName     = '';

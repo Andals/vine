@@ -6,12 +6,12 @@
 * @date 2015-07-05
  */
 
-namespace Vine\Contract;
+namespace Vine\Component\Routing;
 
 /**
     * This is route interface
  */
-interface Route
+interface RouteInterface
 {/*{{{*/
 
     /**

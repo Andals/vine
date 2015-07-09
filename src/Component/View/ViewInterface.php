@@ -6,12 +6,12 @@
 * @date 2015-07-06
  */
 
-namespace Vine\Contract;
+namespace Vine\Component\View;
 
 /**
     * This is view interface
  */
-interface View
+interface ViewInterface
 {/*{{{*/
 
     /**

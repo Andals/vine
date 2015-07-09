@@ -6,7 +6,7 @@
 * @date 2015-07-03
  */
 
-namespace Vine;
+namespace Vine\Framework;
 
 /**
     * App bootstrap
@@ -17,11 +17,11 @@ class Bootstrap
     /**
         * Run every protected function which name has prefix init
         *
-        * @param \Vine\Loader $loader
+        * @param \Vine\Framework\Loader $loader
         *
         * @return 
      */
-    final public function boot(\Vine\Loader $loader)
+    final public function boot(\Vine\Framework\Loader $loader)
     {/*{{{*/
         $ref = new \ReflectionClass($this);
 
@@ -36,14 +36,14 @@ class Bootstrap
 
     protected function initRequest($loader)
     {/*{{{*/
-        $loader->setRequest(new \Vine\Http\Request());
+        $loader->setRequest(new \Vine\Component\Http\Request());
     }/*}}}*/
     protected function initRouter($loader)
     {/*{{{*/
-        $loader->setRouter(new \Vine\Routing\Router());
+        $loader->setRouter(new \Vine\Component\Routing\Router());
     }/*}}}*/
     protected function initResponse($loader)
     {/*{{{*/
-        $loader->setResponse(new \Vine\Http\Response());
+        $loader->setResponse(new \Vine\Component\Http\Response());
     }/*}}}*/
 }/*}}}*/

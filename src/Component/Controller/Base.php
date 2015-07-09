@@ -1,10 +1,10 @@
 <?php
-namespace Vine\Controller;
+namespace Vine\Component\Controller;
 
 /**
     * This is controller base
  */
-abstract class Base implements \Vine\Contract\Controller
+abstract class Base implements \Vine\Component\Controller\ControllerInterface
 {/*{{{*/
     protected $request = null;
     protected $response = null;
@@ -19,7 +19,7 @@ abstract class Base implements \Vine\Contract\Controller
     /**
         * {@inheritdoc}
      */
-    public function dispatch($actionName, \Vine\Contract\Request $request, \Vine\Contract\Response $response)
+    public function dispatch($actionName, \Vine\Component\Http\RequestInterface $request, \Vine\Component\Http\ResponseInterface $response)
     {/*{{{*/
         $this->request  = $request;
         $this->response = $response;
@@ -27,10 +27,9 @@ abstract class Base implements \Vine\Contract\Controller
         $this->preAction();
 
         $funcName = lcfirst($actionName).'Action';
-        if (!method_exists($this, $funcName)) {
-            throw new \Vine\Error\Exception(\Vine\Error\Errno::E_CONTROLLER_ACTION_NOT_EXISTS);
+        if (method_exists($this, $funcName)) {
+            $this->$funcName();
         }
-        $this->$funcName();
 
         $this->postAction();
     }/*}}}*/

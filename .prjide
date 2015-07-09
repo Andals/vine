@@ -2,42 +2,43 @@ vine=$PWD in=tool/in.vim {
  README.md
  composer.json
  src=src {
-  Bootstrap.php
-  Loader.php
-  App=App {
-   Base.php
-   Web.php
+  Component=Component {
+   Container=Container {
+    ContainerInterface.php
+    Obj.php
+   }
+   Controller=Controller {
+    Base.php
+    ControllerInterface.php
+   }
+   Http=Http {
+    Request.php
+    RequestInterface.php
+    Response.php
+    ResponseInterface.php
+   }
+   Routing=Routing {
+    Route.php
+    RouteInterface.php
+    Router.php
+    RouterInterface.php
+   }
+   View=View {
+    Base.php
+    ViewInterface.php
+   }
   }
-  Container=Container {
-   Obj.php
-  }
-  Contract=Contract {
-   Container.php
-   Controller.php
-   Request.php
-   Response.php
-   Route.php
-   Router.php
-   View.php
-  }
-  Controller=Controller {
-   Base.php
-  }
-  Error=Error {
-   Errno.php
-   Exception.php
-  }
-  Http=Http {
-   Request.php
-   Response.php
-  }
-  Routing=Routing {
-   Route.php
-   Router.php
-  }
-  View=View {
-   Base.php
-   Php.php
+  Framework=Framework {
+   Bootstrap.php
+   Loader.php
+   App=App {
+    Base.php
+    Web.php
+   }
+   Error=Error {
+    Errno.php
+    Exception.php
+   }
   }
  }
  tool=tool {

@@ -6,12 +6,12 @@
 * @date 2015-07-03
  */
 
-namespace Vine\Container;
+namespace Vine\Component\Container;
 
 /**
     * Store obj use key => value
  */
-class Obj implements \Vine\Contract\Container
+class Obj implements \Vine\Component\Container\ContainerInterface
 {/*{{{*/
     protected $objs = array();
 

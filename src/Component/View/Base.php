@@ -1,10 +1,10 @@
 <?php
-namespace Vine\View;
+namespace Vine\Component\View;
 
 /**
     * This is view base
  */
-abstract class Base implements \Vine\Contract\View
+abstract class Base implements \Vine\Component\View\ViewInterface
 {/*{{{*/
 
     /**

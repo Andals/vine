@@ -6,12 +6,12 @@
 * @date 2015-07-05
  */
 
-namespace Vine\Http;
+namespace Vine\Component\Http;
 
 /**
     * This is default request
  */
-class Request implements \Vine\Contract\Request
+class Request implements \Vine\Component\Http\RequestInterface
 {/*{{{*/
 
     /**

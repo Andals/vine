@@ -6,30 +6,30 @@
 * @date 2015-07-05
  */
 
-namespace Vine\Contract;
+namespace Vine\Component\Container;
 
 /**
     * This is container interface
  */
-interface Container
+interface ContainerInterface
 {/*{{{*/
 
     /**
-        * store obj
+        * store mix
         *
-        * @param obj $obj
+        * @param mix $mix
         * @param string $key
         *
         * @return bool
      */
-    public function add($obj, $key='');
+    public function add($mix, $key='');
 
     /**
-        * get obj
+        * get mix
         *
         * @param string $key
         *
-        * @return obj depend on your saved
+        * @return mix
      */
     public function get($key);
 }/*}}}*/

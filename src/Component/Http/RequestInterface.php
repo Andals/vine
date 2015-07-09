@@ -6,12 +6,12 @@
 * @date 2015-07-05
  */
 
-namespace Vine\Contract;
+namespace Vine\Component\Http;
 
 /**
     * This is request interface
  */
-interface Request
+interface RequestInterface
 {/*{{{*/
 
     /**

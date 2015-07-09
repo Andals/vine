@@ -6,7 +6,7 @@
 * @date 2015-07-03
  */
 
-namespace Vine\App;
+namespace Vine\Framework\App;
 
 /**
     * This is app base
@@ -29,17 +29,17 @@ abstract class Base
     public function __construct($appName)
     {/*{{{*/
         $this->appName = $appName;
-        $this->loader  = \Vine\Loader::getInstance();
+        $this->loader  = \Vine\Framework\Loader::getInstance();
     }/*}}}*/
 
     /**
         * Run bootstrap
         *
-        * @param \Vine\Bootstrap $bootstrap
+        * @param \Vine\Framework\Bootstrap $bootstrap
         *
-        * @return \Vine\App\Base
+        * @return \Vine\Framework\App\Base
      */
-    final public function bootStrap(\Vine\Bootstrap $bootstrap)
+    final public function bootStrap(\Vine\Framework\Bootstrap $bootstrap)
     {/*{{{*/
         $bootstrap->boot($this->loader);
 

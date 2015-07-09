@@ -6,12 +6,12 @@
 * @date 2015-07-02
  */
 
-namespace Vine\App;
+namespace Vine\Framework\App;
 
 /**
     * This is app for web which has view
  */
-final class Web extends \Vine\App\Base
+final class Web extends \Vine\Framework\App\Base
 {/*{{{*/
 
     /**

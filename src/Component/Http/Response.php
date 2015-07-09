@@ -6,9 +6,12 @@
 * @date 2015-07-08
  */
 
-namespace Vine\Http;
+namespace Vine\Component\Http;
 
-class Response implements \Vine\Contract\Response
+/**
+    * This is default response
+ */
+class Response implements \Vine\Component\Http\ResponseInterface
 {/*{{{*/
     private $body = '';
 

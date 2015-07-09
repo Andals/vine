@@ -7,7 +7,7 @@
 * @date 2015-07-05
  */
 
-namespace Vine\Error;
+namespace Vine\Framework\Error;
 
 /**
     * This class define errno
