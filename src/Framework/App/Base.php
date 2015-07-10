@@ -29,7 +29,7 @@ abstract class Base
     public function __construct($appName)
     {/*{{{*/
         $this->appName = $appName;
-        $this->loader  = \Vine\Framework\Loader::getInstance();
+        $this->loader  = new \Vine\Framework\Loader(new \Vine\Component\Container\Obj());
     }/*}}}*/
 
     /**

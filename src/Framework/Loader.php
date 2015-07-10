@@ -20,28 +20,19 @@ class Loader
 
     private $container = null;
 
-    private static $instances = array();
-
-    private function __construct()
-    {/*{{{*/
-        $this->container = new \Vine\Component\Container\Obj();
-    }/*}}}*/
 
     /**
-        * Singleton
+        * Loader construct
         *
-        * @return \Vine\Framework\Loader
+        * @param \Vine\Component\Container\ContainerInterface $container
+        *
+        * @return 
      */
-    public static function getInstance()
+    public function __construct(\Vine\Component\Container\ContainerInterface $container)
     {/*{{{*/
-        $cls = get_called_class();
-        if(!isset(self::$instances[$cls]) || !self::$instances[$cls] instanceof static)
-        {
-            self::$instances[$cls] = new static();
-        }
-
-        return self::$instances[$cls];
+        $this->container = $container;
     }/*}}}*/
+
 
     /**
         * Set request instance
