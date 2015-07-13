@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://vine.org)
+ * This file is part of the Vine Framework (http://vine.org)
  * Copyright (c) 2015 Liang Chao
  */
 
