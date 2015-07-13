@@ -53,7 +53,13 @@ class Loader
      */
     public function loadRequest()
     {/*{{{*/
-        return $this->container->get(self::KEY_REQUEST);
+        $request = $this->container->get(self::KEY_REQUEST);
+        if (is_null($request)) {
+            $request = new \Vine\Component\Http\Request();
+            $this->setRequest($request);
+        }
+
+        return $request;
     }/*}}}*/
     
     /**
@@ -75,7 +81,13 @@ class Loader
      */
     public function loadResponse()
     {/*{{{*/
-        return $this->container->get(self::KEY_RESPONSE);
+        $response = $this->container->get(self::KEY_RESPONSE);
+        if (is_null($response)) {
+            $response = new \Vine\Component\Http\Response();
+            $this->setResponse($response);
+        }
+
+        return $response;
     }/*}}}*/
 
     /**
@@ -97,7 +109,13 @@ class Loader
      */
     public function loadRouter()
     {/*{{{*/
-        return $this->container->get(self::KEY_ROUTER);
+        $router = $this->container->get(self::KEY_ROUTER);
+        if (is_null($router)) {
+            $router = new \Vine\Component\Routing\Router();
+            $this->setRouter($router);
+        }
+
+        return $router;
     }/*}}}*/
 
     /**

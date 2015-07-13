@@ -32,18 +32,4 @@ class Bootstrap
             }
         }
     }/*}}}*/
-
-
-    protected function initRequest($loader)
-    {/*{{{*/
-        $loader->setRequest(new \Vine\Component\Http\Request());
-    }/*}}}*/
-    protected function initRouter($loader)
-    {/*{{{*/
-        $loader->setRouter(new \Vine\Component\Routing\Router());
-    }/*}}}*/
-    protected function initResponse($loader)
-    {/*{{{*/
-        $loader->setResponse(new \Vine\Component\Http\Response());
-    }/*}}}*/
 }/*}}}*/
