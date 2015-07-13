@@ -51,13 +51,4 @@ class Simple extends Base
         return $content;
     }
     
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function display($tplName, $data=array())
-    {
-        $tpl = $this->render($tplName, $data);
-        echo($tpl);
-    }
 }

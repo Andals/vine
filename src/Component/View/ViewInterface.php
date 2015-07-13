@@ -44,13 +44,4 @@ interface ViewInterface
      */
 	public function render($tplName, $data=array());
 
-    /**
-        * Render tpl and display
-        *
-        * @param string $tplName
-        * @param array $data
-        *
-        * @return 
-     */
-	public function display($tplName, $data=array());
 }/*}}}*/

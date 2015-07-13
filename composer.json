@@ -2,8 +2,5 @@
     "name": "Andals/vine",
     "autoload": {
         "psr-4": {"Vine\\": "src/"}
-    },
-    "require": {
-        "smarty/smarty": "~3.1"
     }
 }

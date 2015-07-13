@@ -8,9 +8,9 @@ class Smarty extends Base
     /**
      * Smarty object
      *
-     * @var Smarty
+     * @var \Smarty
      */
-    protected $Smarty;
+    protected $smarty;
 
     /**
      * construct method
@@ -24,15 +24,15 @@ class Smarty extends Base
     public function __construct($compileDir, $cacheDir = "./", $caching = false, $leftDelimiter = "{%", $rightDelimiter = "%}")
     {
         // init Smarty
-        $this->Smarty = new \Smarty();
-        $this->Smarty->caching = $caching;
+        $this->smarty = new \Smarty();
+        $this->smarty->caching = $caching;
         
-        $this->Smarty->template_dir = $this->viewPath;
-        $this->Smarty->compile_dir = $compileDir;
-        $this->Smarty->cache_dir = $cacheDir;
+        $this->smarty->template_dir = $this->viewRoot;
+        $this->smarty->compile_dir = $compileDir;
+        $this->smarty->cache_dir = $cacheDir;
         
-        $this->Smarty->left_delimiter = $leftDelimiter;
-        $this->Smarty->right_delimiter = $rightDelimiter;
+        $this->smarty->left_delimiter = $leftDelimiter;
+        $this->smarty->right_delimiter = $rightDelimiter;
     }
 
     
@@ -41,7 +41,7 @@ class Smarty extends Base
      */
     public function assign($key, $value, $secureFilter=true)
     {
-        $this->Smarty->assign($key, $value, $secureFilter);
+        $this->smarty->assign($key, $value, $secureFilter);
     }
     
     /**
@@ -50,16 +50,6 @@ class Smarty extends Base
     public function render($tplName, $data=array())
     {
         $tplFile = $this->getTplFile($tplName);
-        return $this->Smarty->fetch($tplFile);
-    }
-    
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function display($tplName, $data=array())
-    {
-        $tpl = $this->render($tplName, $data);
-        echo($tpl);
+        return $this->smarty->fetch($tplFile);
     }
 }
