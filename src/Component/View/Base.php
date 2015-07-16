@@ -19,7 +19,7 @@ abstract class Base implements \Vine\Component\View\ViewInterface
      */
 	public function setViewRoot($viewRoot)
     {
-        $this->viewRoot = rtrim($viewRoot, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $this->viewRoot = rtrim($viewRoot, '/') . '/';
     }
     
     /**
@@ -32,7 +32,7 @@ abstract class Base implements \Vine\Component\View\ViewInterface
      */
     protected function getTplFile($tplName)
     {
-        $tplFile = $this->viewRoot . ltrim($tplName, DIRECTORY_SEPARATOR);
+        $tplFile = $this->viewRoot . ltrim($tplName, '/');
         if (! file_exists($tplFile)) {
             throw new \Exception('template file ' . $tplFile . ' not exists');
         }
