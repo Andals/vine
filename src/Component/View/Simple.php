@@ -21,7 +21,11 @@ class Simple extends Base
             throw new \Exception('template variable ' . $key . ' name error');
         }
         if ($secureFilter) {
-            $value = htmlspecialchars($value);
+            if (is_array($value)) {
+                return array_walk_recursive($value, 'htmlspecialchars');
+            } else {
+                $value = htmlspecialchars($value);
+            }
         }
         $this->tplVarList[$key] = $value;
     }
