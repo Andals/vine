@@ -17,7 +17,7 @@ class Simple extends Base
      */
     public function assign($key, $value, $secureFilter=true)
     {
-        if (! preg_match('/^[a-zA-Z_]/i', $key)) {
+        if (! preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*/i', $key)) {
             throw new \Exception('template variable ' . $key . ' name error');
         }
         if ($secureFilter) {
