@@ -25,21 +25,28 @@ abstract class Base
      */
     abstract public function run($moduleName);
 
+    /**
+        * Get app loader
+        *
+        * @return \Vine\Component\Loader\Base
+     */
+    abstract protected function getLoader();
+
 
     public function __construct($appName)
     {/*{{{*/
         $this->appName = $appName;
-        $this->loader  = new \Vine\Framework\Loader(new \Vine\Component\Container\Obj());
+        $this->loader  = $this->getLoader();
     }/*}}}*/
 
     /**
         * Run bootstrap
         *
-        * @param \Vine\Framework\Bootstrap $bootstrap
+        * @param \Vine\Component\Bootstrap\Base $bootstrap
         *
         * @return \Vine\Framework\App\Base
      */
-    final public function bootStrap(\Vine\Framework\Bootstrap $bootstrap)
+    final public function bootStrap(\Vine\Component\Bootstrap\Base $bootstrap)
     {/*{{{*/
         $bootstrap->boot($this->loader);
 

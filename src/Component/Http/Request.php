@@ -37,7 +37,15 @@ class Request implements \Vine\Component\Http\RequestInterface
      */
     public function getUri()
     {/*{{{*/
-        return $_SERVER['SCRIPT_NAME'];
+        $requestUri  = $_SERVER['REQUEST_URI'];
+        $queryString = $this->getQueryString();
+
+        if ('' == $queryString) {
+            return $requestUri;
+        }
+
+        preg_match('/^([^?]+)/', $requestUri, $matches);
+        return $matches[1];
     }/*}}}*/
 
     /**

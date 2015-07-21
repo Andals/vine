@@ -13,18 +13,60 @@ namespace Vine\Component\Routing;
  */
 class Router implements \Vine\Component\Routing\RouterInterface
 {/*{{{*/
-    const DEF_CONTROLLER_NAME = 'index';
-    const DEF_ACTION_NAME     = 'index';
+    private $routeTable   = array();
+    private $defaultRoute = array();
+
+    public function __construct()
+    {/*{{{*/
+        $this->defaultRoute = array(
+            'routeClsName'  => '\Vine\Component\Routing\Route\Mvc',
+            'userDefined'   => array(),
+        );
+    }/*}}}*/
 
     /**
         * {@inheritdoc}
      */
-    public function findRoute(\Vine\Component\Http\RequestInterface $request)
+    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined=null)
     {/*{{{*/
-        $route = new \Vine\Component\Routing\Route();
+        $this->routeTable[] = array(
+            'rule'          => $rule,
+            'routeClsName'  => $routeClsName,
+            'userDefined'   => $userDefined,
+        );
+    }/*}}}*/
 
-        $route->setControllerName(self::DEF_CONTROLLER_NAME);
-        $route->setActionName(self::DEF_ACTION_NAME);
+    /**
+        * {@inheritdoc}
+     */
+    public function setDefaultRoute($routeClsName, $userDefined=null)
+    {/*{{{*/
+        $this->defaultRoute = array(
+            'routeClsName'  => $routeClsName,
+            'userDefined'   => $userDefined,
+        );
+    }/*}}}*/
+
+    /**
+        * {@inheritdoc}
+     */
+    public function forward(\Vine\Component\Http\RequestInterface $request)
+    {/*{{{*/
+        foreach ($this->routeTable as $routeItem) {
+            $rule = $routeItem['rule'];
+            if ($rule->match($request)) {
+                return $this->loadRoute($routeItem['routeClsName'], $routeItem['userDefined']);
+            }
+        }
+
+        return $this->loadRoute($this->defaultRoute['routeClsName'], $this->defaultRoute['userDefined']);
+    }/*}}}*/
+
+
+    private function loadRoute($routeClsName, $userDefined)
+    {/*{{{*/
+        $route = new $routeClsName();
+        $route->setUserDefined($userDefined);
 
         return $route;
     }/*}}}*/

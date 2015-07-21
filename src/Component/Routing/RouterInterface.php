@@ -15,11 +15,32 @@ interface RouterInterface
 {/*{{{*/
 
     /**
-        * find route by request
+        * Add rule to route table
+        *
+        * @param \Vine\Component\Routing\Rule\RuleInterface $rule
+        * @param string $routeClsName
+        * @param mixed $userDefined
+        *
+        * @return 
+     */
+    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined=null);
+
+    /**
+        * Set default route
+        *
+        * @param string $routeClsName
+        * @param mixed $userDefined
+        *
+        * @return 
+     */
+    public function setDefaultRoute($routeClsName, $userDefined=null);
+
+    /**
+        * Find route by request
         *
         * @param \Vine\Component\Http\RequestInterface $request
         *
-        * @return \Vine\Component\Routing\RouteInterface
+        * @return \Vine\Component\Routing\Route\RouteInterface
      */
-    public function findRoute(\Vine\Component\Http\RequestInterface $request);
+    public function forward(\Vine\Component\Http\RequestInterface $request);
 }/*}}}*/

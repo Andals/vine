@@ -6,22 +6,22 @@
 * @date 2015-07-03
  */
 
-namespace Vine\Framework;
+namespace Vine\Component\Bootstrap;
 
 /**
     * App bootstrap
  */
-class Bootstrap
+abstract class Base
 {/*{{{*/
 
     /**
         * Run every protected function which name has prefix init
         *
-        * @param \Vine\Framework\Loader $loader
+        * @param \Vine\Component\Loader\Base $loader
         *
         * @return 
      */
-    final public function boot(\Vine\Framework\Loader $loader)
+    final public function boot(\Vine\Component\Loader\Base $loader)
     {/*{{{*/
         $ref = new \ReflectionClass($this);
 

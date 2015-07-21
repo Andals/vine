@@ -2,5 +2,13 @@
     "name": "Andals/vine",
     "autoload": {
         "psr-4": {"Vine\\": "src/"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vine\\Test\\": "tests"
+        }
     }
 }
