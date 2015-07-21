@@ -12,10 +12,6 @@ interface ViewInterface
      * Set view root, eg: $prjHome/src/view
      *
      * @param string $viewRoot
-     *
-     * @return
-     *
-     *
      */
     public function setViewRoot($viewRoot);
 
@@ -25,6 +21,20 @@ interface ViewInterface
      * @return string $viewRoot
      */
     public function getViewRoot();
+    
+    /**
+     * Set view suffix, eg: .php
+     *
+     * @param string $viewSuffix
+     */
+    public function setViewSuffix($viewSuffix);
+    
+    /**
+     * Get view suffix, eg: .php
+     *
+     * @return string $viewSuffix
+     */
+    public function getViewSuffix();
 
     /**
      * Asign key => value
@@ -34,9 +44,6 @@ interface ViewInterface
      * @param bool $secureFilter
      *
      * @return
-     *
-     *
-     *
      */
     public function assign($key, $value, $secureFilter = true);
 
@@ -44,9 +51,10 @@ interface ViewInterface
      * Render view file don't display
      *
      * @param string $viewFile
+     * @param bool $withViewSuffix
      * @param array $data
      *
      * @return string
      */
-    public function render($viewFile, array $data = array());
+    public function render($viewFile, $withViewSuffix = false, array $data = array());
 }

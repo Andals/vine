@@ -19,6 +19,12 @@ abstract class Base implements \Vine\Component\View\ViewInterface
      * @var string
      */
     protected $viewFile = '';
+    
+    /**
+     * view suffix
+     * @var string
+     */
+    protected $viewSuffix = '';
 
     /**
      * {@inheritdoc}
@@ -37,16 +43,37 @@ abstract class Base implements \Vine\Component\View\ViewInterface
     }
     
     /**
+     * {@inheritdoc}
+     */
+    public function setViewSuffix($viewSuffix)
+    {
+    	$this->viewSuffix = $viewSuffix;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewSuffix()
+    {
+        return $this->viewSuffix;
+    }
+    
+    /**
      * get view file with view root
      * 
      * @param string $viewFile
+     * @param bool $withViewSuffix
      * 
      * @throws \Exception
      * @return string
      */
-    protected function getViewFileWithViewRoot($viewFile)
+    protected function getViewFileWithViewRoot($viewFile, $withViewSuffix)
     {
         $viewFile = $this->viewRoot . ltrim($viewFile, '/');
+        if (! $withViewSuffix) {
+            $viewFile .= $this->viewSuffix;
+        }
+        
         if (! file_exists($viewFile)) {
             throw new \Exception('view file ' . $viewFile . ' not exists');
         }

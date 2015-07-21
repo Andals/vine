@@ -37,10 +37,10 @@ class Simple extends Base
     /**
      * {@inheritdoc}
      */
-    public function render($viewFile, array $data = array())
+    public function render($viewFile, $withViewSuffix = false, array $data = array())
     {
         // init view file
-        $this->viewFile = $this->getViewFileWithViewRoot($viewFile);
+        $this->viewFile = $this->getViewFileWithViewRoot($viewFile, $withViewSuffix);
         
         // assin variable
         if (is_array($data)) {
