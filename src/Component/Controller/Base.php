@@ -9,28 +9,27 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     protected $request = null;
     protected $response = null;
 
-    protected function preAction()
+    public function __construct($moduleName, $controllerName, $actionName)
     {/*{{{*/
     }/*}}}*/
-    protected function postAction()
+    public function setView(\Vine\Component\View\ViewInterface $view)
     {/*{{{*/
     }/*}}}*/
-
-    /**
-        * {@inheritdoc}
-     */
-    public function dispatch($actionName, \Vine\Component\Http\RequestInterface $request, \Vine\Component\Http\ResponseInterface $response)
+    public function setRequest(\Vine\Component\Http\RequestInterface $request)
     {/*{{{*/
-        $this->request  = $request;
+        $this->request = $request;
+    }/*}}}*/
+    public function setResponse(\Vine\Component\Http\ResponseInterface $response)
+    {/*{{{*/
         $this->response = $response;
-
-        $this->preAction();
-
-        $funcName = lcfirst($actionName).'Action';
-        if (method_exists($this, $funcName)) {
-            $this->$funcName();
-        }
-
-        $this->postAction();
+    }/*}}}*/
+    public function autoRender()
+    {/*{{{*/
+    }/*}}}*/
+    public function beforeAction()
+    {/*{{{*/
+    }/*}}}*/
+    public function afterAction()
+    {/*{{{*/
     }/*}}}*/
 }/*}}}*/

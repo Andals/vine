@@ -13,19 +13,40 @@ namespace Vine\Component\Routing;
  */
 class Router implements \Vine\Component\Routing\RouterInterface
 {/*{{{*/
-    const DEF_CONTROLLER_NAME = 'index';
-    const DEF_ACTION_NAME     = 'index';
+    private $routeTable   = array();
+    private $defaultRoute = null;
+
+    /**
+        * {@inheritdoc}
+     */
+    public function addRule(\Vine\Component\Routing\Rule\RuleInterface $rule, \Vine\Component\Routing\Route\RouteInterface $route)
+    {/*{{{*/
+        $this->routeTable[] = array(
+            'rule'  => $rule,
+            'route' => $route,
+        );
+    }/*}}}*/
+
+    /**
+        * {@inheritdoc}
+     */
+    public function setDefaultRoute(\Vine\Component\Routing\Rout\RouteInterface $route)
+    {/*{{{*/
+        $this->defaultRoute = $route;
+    }/*}}}*/
 
     /**
         * {@inheritdoc}
      */
     public function findRoute(\Vine\Component\Http\RequestInterface $request)
     {/*{{{*/
-        $route = new \Vine\Component\Routing\Route();
+        foreach ($this->routeTable as $routeItem) {
+            $rule = $routeItem['rule'];
+            if ($rule->match($request)) {
+                return $routeItem['route'];
+            }
+        }
 
-        $route->setControllerName(self::DEF_CONTROLLER_NAME);
-        $route->setActionName(self::DEF_ACTION_NAME);
-
-        return $route;
+        return is_null($this->defaultRoute) ? new \Vine\Component\Routing\Route\Mvc() : $this->defaultRoute;
     }/*}}}*/
 }/*}}}*/

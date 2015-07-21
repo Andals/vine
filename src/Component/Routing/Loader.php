@@ -3,18 +3,17 @@
 * @file Loader.php
 * @author ligang
 * @version 1.0
-* @date 2015-07-03
+* @date 2015-07-21
  */
 
-namespace Vine\Framework;
+namespace Vine\Component\Routing;
 
 /**
-    * Used in app process
+    * Routing DI
  */
 class Loader
 {/*{{{*/
     const KEY_REQUEST  = 'request';
-    const KEY_ROUTER   = 'router';
     const KEY_RESPONSE = 'response';
     const KEY_VIEW     = 'view';
 
@@ -53,15 +52,9 @@ class Loader
      */
     public function loadRequest()
     {/*{{{*/
-        $request = $this->container->get(self::KEY_REQUEST);
-        if (is_null($request)) {
-            $request = new \Vine\Component\Http\Request();
-            $this->setRequest($request);
-        }
-
-        return $request;
+        return $this->container->get(self::KEY_REQUEST);
     }/*}}}*/
-
+    
     /**
         * Set response instance
         *
@@ -81,41 +74,7 @@ class Loader
      */
     public function loadResponse()
     {/*{{{*/
-        $response = $this->container->get(self::KEY_RESPONSE);
-        if (is_null($response)) {
-            $response = new \Vine\Component\Http\Response();
-            $this->setResponse($response);
-        }
-
-        return $response;
-    }/*}}}*/
-    
-    /**
-        * Set router instance
-        *
-        * @param \Vine\Component\Routing\RouterInterface $router
-        *
-        * @return 
-     */
-    public function setRouter(\Vine\Component\Routing\RouterInterface $router)
-    {/*{{{*/
-        $this->container->add($router, self::KEY_ROUTER);
-    }/*}}}*/
-
-    /**
-        * Get router instance
-        *
-        * @return \Vine\Component\Routing\RouterInterface
-     */
-    public function loadRouter()
-    {/*{{{*/
-        $router = $this->container->get(self::KEY_ROUTER);
-        if (is_null($router)) {
-            $router = new \Vine\Component\Routing\Router();
-            $this->setRouter($router);
-        }
-
-        return $router;
+        return $this->container->get(self::KEY_RESPONSE);
     }/*}}}*/
 
     /**

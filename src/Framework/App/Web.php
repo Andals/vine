@@ -22,13 +22,18 @@ final class Web extends \Vine\Framework\App\Base
         $request  = $this->loader->loadRequest();
         $route    = $this->loader->loadRouter()->findRoute($request);
         $response = $this->loader->loadResponse();
+        $view     = $this->loader->loadView();
 
-        $userDefined = $route->getUserDefined();
-        if (is_callable($userDefined)) {
-            call_user_func($userDefined, $request, $response);
-        } else {
-            $controller = $this->loader->loadController($this->appName, $moduleName, $route->getControllerName());
-            $controller->dispatch($route->getActionName(), $request, $response);
+        $routingLoader = new \Vine\Component\Routing\Loader(new \Vine\Component\Container\Obj());
+        $routingLoader->setRequest($request);
+        $routingLoader->setResponse($response);
+        if (!is_null($view)) {
+            $routingLoader->setView($view);
+        }
+
+        $response = $route->go($this->appName, $moduleName, $routingLoader);
+        if ($response instanceof \Vine\Component\Http\ResonseInterface) {
+            $response->send();
         }
     }/*}}}*/
 }/*}}}*/

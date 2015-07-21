@@ -23,19 +23,6 @@ interface ControllerInterface
      */
     public function __construct($moduleName, $controllerName, $actionName);
 
-    /**  
-     * This method is invoked right before an action is to be executed 
-     * You may override this method to do last-minute preparation for the action.
-     * @return boolean whether the action should be executed.
-     */
-    public function beforeAction();
-
-    /** 
-     * This method is invoked right after an action is executed.
-     * You may override this method to do some postprocessing for the action.
-     */
-    public function afterAction();
-
     /**
      * set view object which is used to render template.
      * @param \Vine\Component\View\ViewInterface $view view object.
@@ -57,6 +44,19 @@ interface ControllerInterface
      * @param \Vine\Component\Http\ResponseInterface $response response object.
      */
     public function setResponse(\Vine\Component\Http\ResponseInterface $response);
+
+    /**  
+     * This method is invoked right before an action is to be executed 
+     * You may override this method to do last-minute preparation for the action.
+     * @return boolean whether the action should be executed.
+     */
+    public function beforeAction();
+
+    /** 
+     * This method is invoked right after an action is executed.
+     * You may override this method to do some postprocessing for the action.
+     */
+    public function afterAction();
 
     /**
      * render view automatically.

@@ -13,15 +13,24 @@ namespace Vine\Component\Routing\Route;
  */
 interface RouteInterface
 {/*{{{*/
+
+    /**
+        * Set user defined params
+        *
+        * @param $userDefined
+        *
+        * @return 
+     */
+    public function setUserDefined($userDefined=null);
+
     /**
         * After router find a route, go for it.
         *
         * @param string $appName
         * @param string $moduleName
-        * @param \Vine\Component\Http\Request $moduleName
-        * @param array $ext
+        * @param \Vine\Component\Routing\Loader $moduleName
         *
         * @return \Vine\Component\Http\ResonseInterface
      */
-    public function go($appName, $moduleName, $request, $ext=array());
+    public function go($appName, $moduleName, \Vine\Component\Routing\Loader $loader);
 }/*}}}*/
