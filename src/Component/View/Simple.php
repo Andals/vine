@@ -33,11 +33,13 @@ class Simple extends Base
     /**
      * {@inheritdoc}
      */
-    public function render($tplName, $data=array())
+    public function render($tplName, array $data=array())
     {
         // assin variable
-        foreach ($data as $key => $value) {
-        	$this->assign($key, $value);
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $this->assign($key, $value);
+            }
         }
         
         // extract template variable list
@@ -45,10 +47,8 @@ class Simple extends Base
             extract($this->tplVarList);
         }
         
-        $tplFile = $this->getTplFile($tplName);
-        
         ob_start();
-        require $tplFile;
+        require $this->getTplFile($tplName);
         $content = ob_get_contents();
         ob_end_clean();
 
