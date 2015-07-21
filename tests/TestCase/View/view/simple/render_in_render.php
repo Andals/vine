@@ -1,1 +1,1 @@
-render in render: <?php echo $this->render('simple/assign_string_value.php'); ?>
+render in render: <?php echo $this->render('simple/assign_string_value'); ?>
