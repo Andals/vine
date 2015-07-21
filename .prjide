@@ -1,7 +1,6 @@
 vine=$PWD in=tool/in.vim {
  README.md
  composer.json
- composer.lock
  src=src {
   Component=Component {
    Container=Container {
@@ -27,7 +26,6 @@ vine=$PWD in=tool/in.vim {
    View=View {
     Base.php
     Simple.php
-    Smarty.php
     ViewInterface.php
    }
   }

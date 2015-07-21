@@ -28,13 +28,13 @@ interface ControllerInterface
      * You may override this method to do last-minute preparation for the action.
      * @return boolean whether the action should be executed.
      */
-    protected function beforeAction();
+    public function beforeAction();
 
     /** 
      * This method is invoked right after an action is executed.
      * You may override this method to do some postprocessing for the action.
      */
-    protected function afterAction();
+    public function afterAction();
 
     /**
      * set view object which is used to render template.
@@ -46,23 +46,21 @@ interface ControllerInterface
      * set request object.
      * NOTE:Request object is needed in action methods.
      * We should guarantee this method is called before that.
-     * @param \Vine\Component\Http\RequestInterface $view view object.
+     * @param \Vine\Component\Http\RequestInterface $request request object.
      */
-    public function setRequest(\Vine\Component\Http\RequestInterface $view);
+    public function setRequest(\Vine\Component\Http\RequestInterface $request);
 
     /**
      * set response object.
      * NOTE:Response object is needed in action methods.
      * We should guarantee this method is called before that.
-     * @param \Vine\Component\Http\ResponseInterface $view view object.
+     * @param \Vine\Component\Http\ResponseInterface $response response object.
      */
-    public function setResponse(\Vine\Component\Http\ResponseInterface $view);
+    public function setResponse(\Vine\Component\Http\ResponseInterface $response);
 
     /**
      * render view automatically.
      * this method is invoked when response is not set in the action function.
-     * @param \Vine\Component\Http\ResponseInterface $response view object.
      */
-    public function autoRender(\Vine\Component\Http\ResponseInterface $response);
-
+    public function autoRender();
 }/*}}}*/
