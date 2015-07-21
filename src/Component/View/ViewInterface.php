@@ -1,10 +1,4 @@
 <?php
-/**
-* @file View.php
-* @author ligang
-* @version 1.0
-* @date 2015-07-06
- */
 
 namespace Vine\Component\View;
 
@@ -12,23 +6,25 @@ namespace Vine\Component\View;
  * This is view interface
  */
 interface ViewInterface
-{/*{{{*/
+{
 
     /**
      * Set view root, eg: $prjHome/src/view
      *
      * @param string $viewRoot
      *
-     * @return 
+     * @return
+     *
+     *
      */
-	public function setViewRoot($viewRoot);
-	
-	/**
-	 * Get view root, eg: $prjHome/src/view
-	 *
-	 * @return string $viewRoot
-	 */
-	public function getViewRoot();
+    public function setViewRoot($viewRoot);
+
+    /**
+     * Get view root, eg: $prjHome/src/view
+     *
+     * @return string $viewRoot
+     */
+    public function getViewRoot();
 
     /**
      * Asign key => value
@@ -38,6 +34,8 @@ interface ViewInterface
      * @param bool $secureFilter
      *
      * @return
+     *
+     *
      *
      */
     public function assign($key, $value, $secureFilter = true);
@@ -51,5 +49,4 @@ interface ViewInterface
      * @return string
      */
     public function render($viewFile, array $data = array());
-
-}/*}}}*/
+}
