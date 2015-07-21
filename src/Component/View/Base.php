@@ -13,6 +13,12 @@ abstract class Base implements \Vine\Component\View\ViewInterface
      * @var string
      */
     protected $viewRoot = '';
+    
+    /**
+     * view file
+     * @var string
+     */
+    protected $viewFile = '';
 
     /**
      * {@inheritdoc}
@@ -23,19 +29,27 @@ abstract class Base implements \Vine\Component\View\ViewInterface
     }
     
     /**
-     * get template file
+     * {@inheritdoc}
+     */
+    public function getViewRoot()
+    {
+        return $this->viewRoot;
+    }
+    
+    /**
+     * get view file with view root
      * 
-     * @param string $tplName
+     * @param string $viewFile
      * 
      * @throws \Exception
      * @return string
      */
-    protected function getTplFile($tplName)
+    protected function getViewFileWithViewRoot($viewFile)
     {
-        $tplFile = $this->viewRoot . ltrim($tplName, '/');
-        if (! file_exists($tplFile)) {
-            throw new \Exception('template file ' . $tplFile . ' not exists');
+        $viewFile = $this->viewRoot . ltrim($viewFile, '/');
+        if (! file_exists($viewFile)) {
+            throw new \Exception('view file ' . $viewFile . ' not exists');
         }
-        return $tplFile;
+        return $viewFile;
     }
 }

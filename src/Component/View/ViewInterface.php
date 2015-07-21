@@ -9,39 +9,47 @@
 namespace Vine\Component\View;
 
 /**
-    * This is view interface
+ * This is view interface
  */
 interface ViewInterface
 {/*{{{*/
 
     /**
-        * Set view root, eg: $prjHome/src/view
-        *
-        * @param string $viewRoot
-        *
-        * @return 
+     * Set view root, eg: $prjHome/src/view
+     *
+     * @param string $viewRoot
+     *
+     * @return 
      */
 	public function setViewRoot($viewRoot);
+	
+	/**
+	 * Get view root, eg: $prjHome/src/view
+	 *
+	 * @return string $viewRoot
+	 */
+	public function getViewRoot();
 
     /**
-        * Asign key => value
-        *
-        * @param string $key
-        * @param mix $value
-        * @param bool $secureFilter
-        *
-        * @return 
+     * Asign key => value
+     *
+     * @param string $key
+     * @param mix $value
+     * @param bool $secureFilter
+     *
+     * @return
+     *
      */
-	public function assign($key, $value, $secureFilter=true);
+    public function assign($key, $value, $secureFilter = true);
 
     /**
-        * Render tpl don't display
-        *
-        * @param string $tplName
-        * @param array $data
-        *
-        * @return string
+     * Render view file don't display
+     *
+     * @param string $viewFile
+     * @param array $data
+     *
+     * @return string
      */
-	public function render($tplName, $data=array());
+    public function render($viewFile, array $data = array());
 
 }/*}}}*/
