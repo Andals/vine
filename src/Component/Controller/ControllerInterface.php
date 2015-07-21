@@ -13,39 +13,56 @@ namespace Vine\Component\Controller;
  */
 interface ControllerInterface
 {/*{{{*/
+
+    /**  
+     * Constructor.
+     * moduleName, controllerName, actionName is set in this method.
+     * @param string $moduleName module name.
+     * @param string $controllerName controller name.
+     * @param string $actionName action name.
+     */
+    public function __construct($moduleName, $controllerName, $actionName);
+
     /**  
      * This method is invoked right before an action is to be executed 
      * You may override this method to do last-minute preparation for the action.
-     * @param string $actionName the action to be executed.
      * @return boolean whether the action should be executed.
      */
-    protected function beforeAction($actionName)
-    {   
-        return true;
-    }   
+    protected function beforeAction();
 
     /** 
      * This method is invoked right after an action is executed.
      * You may override this method to do some postprocessing for the action.
-     * @param string $actionName the action just executed.
      */
-    protected function afterAction($actionName)
-    {   
-    }
+    protected function afterAction();
+
     /**
      * set view object which is used to render template.
      * @param \Vine\Component\View\ViewInterface $view view object.
      */
-    public function setView(\Vine\Component\View\ViewInterface $view)
-    {
-    }
+    public function setView(\Vine\Component\View\ViewInterface $view);
+
+    /**
+     * set request object.
+     * NOTE:Request object is needed in action methods.
+     * We should guarantee this method is called before that.
+     * @param \Vine\Component\Http\RequestInterface $view view object.
+     */
+    public function setRequest(\Vine\Component\Http\RequestInterface $view);
+
+    /**
+     * set response object.
+     * NOTE:Response object is needed in action methods.
+     * We should guarantee this method is called before that.
+     * @param \Vine\Component\Http\ResponseInterface $view view object.
+     */
+    public function setResponse(\Vine\Component\Http\ResponseInterface $view);
 
     /**
      * render view automatically.
-     * this function is tiggered when response is not set by user in the action function.
+     * this method is invoked when response is not set in the action function.
      * @param \Vine\Component\Http\ResponseInterface $response view object.
      */
-    public function autoRender(\Vine\Component\Http\ResponseInterface $response)
-    {
-    }
+    public function autoRender(\Vine\Component\Http\ResponseInterface $response);
+
 }/*}}}*/
