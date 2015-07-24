@@ -13,6 +13,18 @@ abstract class Base implements \Vine\Component\View\ViewInterface
      * @var string
      */
     protected $viewRoot = '';
+    
+    /**
+     * view file
+     * @var string
+     */
+    protected $viewFile = '';
+    
+    /**
+     * view suffix
+     * @var string
+     */
+    protected $viewSuffix = '';
 
     /**
      * {@inheritdoc}
@@ -23,19 +35,48 @@ abstract class Base implements \Vine\Component\View\ViewInterface
     }
     
     /**
-     * get template file
+     * {@inheritdoc}
+     */
+    public function getViewRoot()
+    {
+        return $this->viewRoot;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setViewSuffix($viewSuffix)
+    {
+    	$this->viewSuffix = $viewSuffix;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewSuffix()
+    {
+        return $this->viewSuffix;
+    }
+    
+    /**
+     * get view file with view root
      * 
-     * @param string $tplName
+     * @param string $viewFile
+     * @param bool $withViewSuffix
      * 
      * @throws \Exception
      * @return string
      */
-    protected function getTplFile($tplName)
+    protected function getViewFileWithViewRoot($viewFile, $withViewSuffix)
     {
-        $tplFile = $this->viewRoot . ltrim($tplName, '/');
-        if (! file_exists($tplFile)) {
-            throw new \Exception('template file ' . $tplFile . ' not exists');
+        $viewFile = $this->viewRoot . ltrim($viewFile, '/');
+        if (! $withViewSuffix) {
+            $viewFile .= $this->viewSuffix;
         }
-        return $tplFile;
+        
+        if (! file_exists($viewFile)) {
+            throw new \Exception('view file ' . $viewFile . ' not exists');
+        }
+        return $viewFile;
     }
 }

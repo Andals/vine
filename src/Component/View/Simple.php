@@ -6,49 +6,59 @@ class Simple extends Base
 {
 
     /**
-     * template variable list
+     * view variable list
      * @author tabalt
      * @var array
      */
-    private $tplVarList = array();
+    private $viewVariableList = array();
 
     /**
      * {@inheritdoc}
      */
-    public function assign($key, $value, $secureFilter=true)
+    public function assign($key, $value, $secureFilter = true)
     {
-        if (! preg_match('/^[a-zA-Z_]/i', $key)) {
-            throw new \Exception('template variable ' . $key . ' name error');
+        if (! preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*/i', $key)) {
+            throw new \Exception('view variable ' . $key . ' name error');
         }
         if ($secureFilter) {
-            $value = htmlspecialchars($value);
+            if (is_array($value)) {
+                array_walk_recursive($value, function (&$item, $key) {
+                    if (is_string($item)) {
+                        $item = htmlspecialchars($item);
+                    }
+                });
+            } else if (is_string($value)) {
+                $value = htmlspecialchars($value);
+            }
         }
-        $this->tplVarList[$key] = $value;
+        $this->viewVariableList[$key] = $value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function render($tplName, $data=array())
+    public function render($viewFile, $withViewSuffix = false, array $data = array())
     {
+        // init view file
+        $this->viewFile = $this->getViewFileWithViewRoot($viewFile, $withViewSuffix);
+        
         // assin variable
-        foreach ($data as $key => $value) {
-        	$this->assign($key, $value);
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $this->assign($key, $value);
+            }
         }
         
-        // extract template variable list
-        if (! empty($this->tplVarList)) {
-            extract($this->tplVarList);
+        // extract view variable list
+        if (! empty($this->viewVariableList)) {
+            extract($this->viewVariableList);
         }
-        
-        $tplFile = $this->getTplFile($tplName);
         
         ob_start();
-        require $tplFile;
+        require $this->viewFile;
         $content = ob_get_contents();
         ob_end_clean();
-
+        
         return $content;
     }
-    
 }
