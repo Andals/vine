@@ -95,6 +95,22 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setRequest(\Vine\Component\Http\RequestInterface $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setResponse(\Vine\Component\Http\ResponseInterface $response)
+    {
+        $this->response = $response;
+    }
+
+    /**
      * set whether to render view or not.
      * true indicates the action will render view, false not.
      * @param boolean $isRender whether to render view or not.
@@ -102,16 +118,6 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     public function setViewRender($isRender)
     {
         $this->isViewRender = $isRender;
-    }
-
-    /**
-     * redirect to destination url.
-     * @see \Vine\Component\Http\Response::redirect() for detail information.
-     * @param string $url redirect destination.
-     */
-    public function redirect($url)
-    {   
-        $this->response->redirect($url);
     }
 
     /**
@@ -163,7 +169,7 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     /**  
      * {@inheritdoc}
      */
-    protected function beforeAction()
+    public function beforeAction()
     {
         return true;
     }
@@ -171,8 +177,30 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     /**  
      * {@inheritdoc}
      */
-    protected function afterAction()
+    public function afterAction()
     {
+    }
+
+    /**
+     * assign data into template.
+     * @see \Vine\Component\View\ViewInterface::assign() for detail information.
+     * @param string $key data key.
+     * @param mixed $value data value.
+     * @param bool $secureFilter whether to filter data or not, for security issues.
+     */
+    protected function assign($key, $value, $secureFilter = true)
+    {
+        $this->view->assign($key, $value, $secureFilter);
+    }
+
+    /**
+     * redirect to destination url.
+     * @see \Vine\Component\Http\Response::redirect() for detail information.
+     * @param string $url redirect destination.
+     */
+    protected function redirect($url)
+    {   
+        $this->response->redirect($url);
     }
 
 }
