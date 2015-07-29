@@ -226,30 +226,58 @@ class ValidatorConf
 
 
     /******************** parse request param *********************************/
-
+    /**
+     * Gets the request params
+     * @param  string $key     params key
+     * @param  mixed $default  default value
+     * @return mixed          
+     */
     private function getParam($key = '', $default = NULL)
     {
         return $this->request->getParam($key, $default);
     }
 
+    /**
+     * Gets the string format request params
+     * @param  string $key     params key
+     * @param  mixed $default default value
+     * @return mixed          
+     */
     private function getStrParam($key = '', $default = NULL)
     {
         $value = $this->getParam($key, $default);
         return is_null($value) ? NULL : trim($value);
     }
 
+    /**
+     * Gets the number format request params
+     * @param  string  $key     params key
+     * @param  mixed $default default value
+     * @return mixed           
+     */
     private function getNumParam($key = '', $default = 0)
     {
         $value = $this->getParam($key, $default);
         return is_null($value) ? NULL : intval($value);
     }
 
+    /**
+     * Gets the array format request params
+     * @param  string $key     params key
+     * @param  mixed  $default default value
+     * @return mixed          
+     */
     private function getArrParam($key = '', $default = array())
     {
         $value = $this->getParam($key, $default);
         return is_null($value) ? NULL : $this->fmtArrValue($value);
     }
 
+    /**
+     * format the array params
+     * @param  mixed $value 
+     * @return array        
+     */
     private function fmtArrValue($value)
     {
         foreach ($value as $k => $v) {
@@ -301,7 +329,10 @@ class ValidatorConf
         }
     }
 
-
+    /**
+     * Gets the request params
+     * @return array 
+     */
     public function getRequestParams()
     {
         return $this->requestParams;
@@ -320,10 +351,4 @@ class ValidatorConf
             default:
         }
     }
-
-
-
-
-
-    
 }

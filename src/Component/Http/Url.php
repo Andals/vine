@@ -47,6 +47,7 @@ namespace Vine\Component\Http;
 class Url 
 {
     /** @var array */
+    // FIXED: 改为Const
     public static $defaultPorts = array(
         'http' => 80,
         'https' => 443,
@@ -81,11 +82,11 @@ class Url
      * @param string|self $url
      * @throws \InvalidArgumentException if URL is malformed
      */
-    public function __construct($url = NULL) 
+    public function __construct($url = null) 
     {
         if (is_string($url)) {
             $p = @parse_url($url); // @ - is escalated to exception
-            if ($p === FALSE) {
+            if ($p === false) {
                 throw new \InvalidArgumentException("Malformed or unsupported URI '$url'.");
             }
 
@@ -93,14 +94,16 @@ class Url
             $this->user = isset($p['user']) ? rawurldecode($p['user']) : '';
             $this->password = isset($p['pass']) ? rawurldecode($p['pass']) : '';
             $this->host = isset($p['host']) ? rawurldecode($p['host']) : '';
-            $this->port = isset($p['port']) ? $p['port'] : NULL;
+            $this->port = isset($p['port']) ? $p['port'] : null;
             $this->setPath(isset($p['path']) ? $p['path'] : '');
             $this->setQuery(isset($p['query']) ? $p['query'] : array());
             $this->fragment = isset($p['fragment']) ? rawurldecode($p['fragment']) : '';
 
-        } elseif ($url instanceof self) {
+        } 
+        /* 是否有必要？以及实现方案 */
+        elseif ($url instanceof self) {
             foreach ($this as $key => $val) {
-                $this->$key = $url->key;
+                $this->$key = $url->$key;
             }
         }
     }
@@ -215,7 +218,7 @@ class Url
     {
         return $this->port
             ? $this->port
-            : (isset(self::$defaultPorts[$this->scheme]) ? self::$defaultPorts[$this->scheme] : NULL);
+            : (isset(self::$defaultPorts[$this->scheme]) ? self::$defaultPorts[$this->scheme] : null);
     }
 
 
@@ -276,9 +279,6 @@ class Url
      */
     public function getQuery()
     {
-        if (PHP_VERSION_ID < 50400) {
-            return str_replace('+', '%20', http_build_query($this->query, '', '&'));
-        }
         return http_build_query($this->query, '', '&', PHP_QUERY_RFC3986);
     }
 
@@ -296,10 +296,10 @@ class Url
     /**
      * Returns the query from key
      * @param  string $name    
-     * @param  $default mixed NULL unsets the parameter
+     * @param  $default mixed null unsets the parameter
      * @return self          
      */
-    public function getQueryParameter($name, $default = NULL)
+    public function getQueryParameter($name, $default = null)
     {
         return isset($this->query[$name]) ? $this->query[$name] : $default;
     }
@@ -387,7 +387,7 @@ class Url
     public function getBasePath()
     {
         $pos = strrpos($this->path, '/');
-        return $pos === FALSE ? '' : substr($this->path, 0, $pos + 1);
+        return $pos === false ? '' : substr($this->path, 0, $pos + 1);
     }
 
 

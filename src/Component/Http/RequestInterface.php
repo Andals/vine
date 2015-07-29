@@ -48,7 +48,7 @@ interface RequestInterface
      * @param  mixed $default value
      * @return mixed          
      */
-    public function getQuery($key = NULL, $default = NULL);
+    public function getQuery($key = null, $default = null);
 
     /**
      * Returns variable provided to the script via POST method ($_POST).
@@ -57,7 +57,7 @@ interface RequestInterface
      * @param  mixed $default value
      * @return mixed         
      */
-    public function getPost($key = NULL, $default = NULL);
+    public function getPost($key = null, $default = null);
 
     /**
      * Returns HTTP request method (GET, POST, HEAD, PUT, ...)
@@ -79,7 +79,7 @@ interface RequestInterface
      * @param  mixed $default 
      * @return mixed          
      */
-    public function getHeader($header, $default = NULL);
+    public function getHeader($header, $default = null);
 
     /**
      * Returns all HTTP headers.
@@ -101,19 +101,19 @@ interface RequestInterface
 
     /**
      * Returns the IP address of the remote client.
-     * @return string|NULL 
+     * @return string|null 
      */
     public function getRemoteAddress();
 
     /**
      * Returns the host of the remote client.
-     * @return string|NULL 
+     * @return string|null 
      */
     public function getRemoteHost();
 
     /**
      * Returns raw content of HTTP request body.
-     * @return string|NULL 
+     * @return string|null 
      */
     public function getRawBody();
 

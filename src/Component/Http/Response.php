@@ -169,11 +169,11 @@ class Response implements \Vine\Component\Http\ResponseInterface
      * @param string $charset     Charset
      * @return self 
      */
-    public function setContentType($contentType, $charset = NULL)
+    public function setContentType($contentType, $charset = null)
     {
         $this->contentType = $contentType;
 
-        if ($charset !== NULL) {
+        if ($charset !== null) {
             $this->charset = $charset;
         }
 
@@ -280,11 +280,11 @@ class Response implements \Vine\Component\Http\ResponseInterface
      * @param boolean $replace Respace origin header?
      * @return self 
      */
-    public function setHeader($name, $value, $replace = TRUE)
+    public function setHeader($name, $value, $replace = true)
     {
         $name = strtolower($name);
 
-        if ($replace === TRUE) {
+        if ($replace === true) {
             $this->headers[$name] = array($value);
         } else {
             $headers = isset($this->headers[$name]) ? $this->headers[$name] : array();
@@ -405,7 +405,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
      * @param  mixed $data return data
      * @return \Vine\Component\Http\Responses\JsonResponse     
      */
-    public function json($data = NULL)
+    public function json($data = null)
     {
         return new \Vine\Component\Http\Responses\JsonResponse($data);
     }
@@ -416,7 +416,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
      * @param  string $callback callback name
      * @return \Vine\Component\Http\Responses\JsonResponse        
      */
-    public function jsonP($data = NULL, $callback = '_callback')
+    public function jsonP($data = null, $callback = '_callback')
     {
         return new \Vine\Component\Http\Responses\JsonResponse($data, $callback);
     }

@@ -26,16 +26,16 @@ class Request implements RequestInterface
     /** @var array */
     private $headers;
 
-    /** @var string|NULL */
+    /** @var string|null */
     private $remoteAddress;
 
-    /** @var string|NULL */
+    /** @var string|null */
     private $remoteHost;
 
-    /** @var callable|NULL */
+    /** @var callable|null */
     private $rawBodyCallback;
 
-    public function __construct(UrlScript $url, $post = NULL, $headers = NULL, $method = NULL, $remoteAddress = NULL, $remoteHost = NULL, $rawBodyCallback = NULL) 
+    public function __construct(UrlScript $url, $post = null, $headers = null, $method = null, $remoteAddress = null, $remoteHost = null, $rawBodyCallback = null) 
     {
         $this->url = $url;
         $this->post = (array) $post;
@@ -53,6 +53,7 @@ class Request implements RequestInterface
      */
     public function getUrl()
     {
+        // FIXED: 是否需要clone
         return clone $this->url;
     }
 
@@ -67,7 +68,7 @@ class Request implements RequestInterface
      * @param  mixed $default 
      * @return mixed          
      */
-    public function getQuery($key = NULL, $default = NULL)
+    public function getQuery($key = null, $default = null)
     {
         if (func_num_args() === 0) {
             return $this->url->getQueryParameters();
@@ -83,7 +84,7 @@ class Request implements RequestInterface
      * @param  mixed $default 
      * @return mixed          
      */
-    public function getPost($key = NULL, $default = NULL)
+    public function getPost($key = null, $default = null)
     {
         if (func_num_args() === 0) {
             return $this->post;
@@ -101,7 +102,8 @@ class Request implements RequestInterface
      * @param  mixed $default 
      * @return mixed          
      */
-    public function getParam($key = NULL, $default = NULL)
+    // FIXED: 通过Query Post获取
+    public function getParam($key = null, $default = null)
     {
         if('' == $key) {
             return array_merge($_GET, $_POST);
@@ -156,7 +158,7 @@ class Request implements RequestInterface
      * @param  mixed
      * @return mixed
      */
-    public function getHeader($header, $default = NULL)
+    public function getHeader($header, $default = null)
     {
         $header = strtolower($header);
         return isset($this->headers[$header]) ? $this->headers[$header] : $default;
@@ -175,11 +177,11 @@ class Request implements RequestInterface
 
     /**
      * Returns referrer.
-     * @return Url|NULL
+     * @return Url|null
      */
     public function getReferer()
     {
-        return isset($this->headers['referer']) ? new \Vine\Component\Http\Url($this->headers['referer']) : NULL;
+        return isset($this->headers['referer']) ? new \Vine\Component\Http\Url($this->headers['referer']) : null;
     }
 
 
@@ -205,7 +207,7 @@ class Request implements RequestInterface
 
     /**
      * Returns the IP address of the remote client.
-     * @return string|NULL
+     * @return string|null
      */
     public function getRemoteAddress()
     {
@@ -215,11 +217,11 @@ class Request implements RequestInterface
 
     /**
      * Returns the host of the remote client.
-     * @return string|NULL
+     * @return string|null
      */
     public function getRemoteHost()
     {
-        if ($this->remoteHost === NULL && $this->remoteAddress !== NULL) {
+        if ($this->remoteHost === null && $this->remoteAddress !== null) {
             $this->remoteHost = getHostByAddr($this->remoteAddress);
         }
         return $this->remoteHost;
@@ -227,11 +229,11 @@ class Request implements RequestInterface
 
     /**
      * Returns raw content of HTTP request body.
-     * @return string|NULL
+     * @return string|null
      */
     public function getRawBody()
     {
-        return $this->rawBodyCallback ? call_user_func($this->rawBodyCallback) : NULL;
+        return $this->rawBodyCallback ? call_user_func($this->rawBodyCallback) : null;
     }    
 
 }/*}}}*/

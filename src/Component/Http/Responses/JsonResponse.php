@@ -34,9 +34,9 @@ class JsonResponse implements ResponseContainerInterface
      * Constructor.
      * @param string $location Location
      */
-    public function __construct($data = NULL, $callback = NULL) {
+    public function __construct($data = null, $callback = null) {
         $this->data = $data;
-        if ($data === NULL) {
+        if ($data === null) {
             $data = [];
         }
 
@@ -74,8 +74,8 @@ class JsonResponse implements ResponseContainerInterface
         return $this;
     }
 
-    public function setCallback($callback = NULL) {
-        if (NULL !== $callback) {
+    public function setCallback($callback = null) {
+        if (null !== $callback) {
             // taken from http://www.geekality.net/2011/08/03/valid-javascript-identifier/
             $pattern = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*+$/u';
             $parts = explode('.', $callback);
@@ -97,7 +97,7 @@ class JsonResponse implements ResponseContainerInterface
     public function send(Request $request, Response $response)
     {
         $response->setStatus($this->status);
-        if ($this->callback !== NULL) {
+        if ($this->callback !== null) {
             $response->setContentType('text/javascript');
             $response->setBody(sprintf('/**/%s(%s);', $this->callback, $this->data));
         } else {

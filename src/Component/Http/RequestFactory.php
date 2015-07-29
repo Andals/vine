@@ -59,12 +59,12 @@ class RequestFactory
             $headers[ strtr($k, '_', '-') ] = $v;
         }
 
-        $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
-        $remoteHost = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL;
+        $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $remoteHost = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
 
         // TODO: proxy's remoteaddr remotehost
         
-        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
+        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null;
         if ($method === 'POST' && isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']) 
             && preg_match('#^[A-Z]+\z#', $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])
         ) {
@@ -74,10 +74,10 @@ class RequestFactory
         // RAW BODY
         $rawBodyCallback = function() {
             static $rawBody;
-
+            // FIXED
             if (PHP_VERSION_ID >= 50600) {
                 return file_get_contents('php://input');
-            } elseif ($rawBody === NULL) {
+            } elseif ($rawBody === null) {
                 $rawBody = (string) file_get_contents('php://input');
             }
             return $rawBody;

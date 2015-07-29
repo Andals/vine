@@ -61,7 +61,7 @@ class UrlScript extends \Vine\Component\Http\Url
     public function getBasePath()
     {
         $pos = strrpos($this->scriptPath, '/');
-        return $pos === FALSE ? '' : substr($this->getPath(), 0, $pos + 1);
+        return $pos === false ? '' : substr($this->getPath(), 0, $pos + 1);
     }
 
 

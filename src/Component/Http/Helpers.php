@@ -18,7 +18,7 @@ class Helpers
     /**
      * @internal
      */
-    public static function stripSlashes($arr, $onlyKeys = FALSE)
+    public static function stripSlashes($arr, $onlyKeys = false)
     {
         $res = array();
         foreach ($arr as $k => $v) {
