@@ -102,9 +102,10 @@ abstract class Base implements ControllerInterface
      */
     public function autoRender()
     {
-        $tpl = $this->moduleName . '/' . $this->controllerName . '/' . $this->actionName;
-
-        $this->display($tpl);
+        if ($this->needViewRender) {
+            $tpl = $this->moduleName . '/' . $this->controllerName . '/' . $this->actionName;
+            $this->display($tpl);
+        }
     }
 
 
