@@ -22,14 +22,23 @@ interface ContainerInterface
         *
         * @return bool
      */
-    public function add($mix, $key='');
+    public function add($mix, $key = '');
 
     /**
-        * get mix
+        * Get mix
         *
         * @param string $key
         *
         * @return mix
      */
     public function get($key);
+
+    /**
+        * Key exists
+        *
+        * @param $key
+        *
+        * @return bool
+     */
+    public function have($key);
 }/*}}}*/

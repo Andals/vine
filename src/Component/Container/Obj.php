@@ -11,22 +11,20 @@ namespace Vine\Component\Container;
 /**
     * Store obj use key => value
  */
-class Obj implements \Vine\Component\Container\ContainerInterface
+class Obj implements ContainerInterface
 {/*{{{*/
     protected $objs = array();
 
     /**
         * {@inheritdoc}
      */
-    public function add($obj, $key='')
+    public function add($obj, $key = '')
     {/*{{{*/
-        if(!is_object($obj))
-        {
+        if (!is_object($obj)) {
             return false;
         }
 
-        if('' == $key)
-        {
+        if ($key == '') {
             $key = get_class($obj);
         }
 
@@ -41,5 +39,13 @@ class Obj implements \Vine\Component\Container\ContainerInterface
     public function get($key)
     {/*{{{*/
         return isset($this->objs[$key]) ? $this->objs[$key] : null;
+    }/*}}}*/
+
+    /**
+        * {@inheritdoc}
+     */
+    public function have($key)
+    {/*{{{*/
+        return isset($this->objs[$key]) ? true : false;
     }/*}}}*/
 }/*}}}*/

@@ -23,7 +23,7 @@ interface RouterInterface
         *
         * @return 
      */
-    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined=null);
+    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined = null);
 
     /**
         * Set default route
@@ -33,7 +33,7 @@ interface RouterInterface
         *
         * @return 
      */
-    public function setDefaultRoute($routeClsName, $userDefined=null);
+    public function setDefaultRoute($routeClsName, $userDefined = null);
 
     /**
         * Find route by request

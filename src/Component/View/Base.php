@@ -4,7 +4,7 @@ namespace Vine\Component\View;
 /**
  * This is view base
  */
-abstract class Base implements \Vine\Component\View\ViewInterface
+abstract class Base implements ViewInterface
 {/*{{{*/
 
     /**

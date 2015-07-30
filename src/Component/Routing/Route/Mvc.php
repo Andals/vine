@@ -11,7 +11,7 @@ namespace Vine\Component\Routing\Route;
 /**
     * Mvc or user defined
  */
-class Mvc extends \Vine\Component\Routing\Route\Base
+class Mvc extends Base
 {/*{{{*/
     const DEF_CONTROLLER_NAME = 'index';
     const DEF_ACTION_NAME     = 'index';
@@ -19,29 +19,20 @@ class Mvc extends \Vine\Component\Routing\Route\Base
     /**
         * {@inheritdoc}
      */
-    public function go($appName, $moduleName, \Vine\Component\Loader\Base $loader)
+    public function go($appName, $moduleName, $container)
     {/*{{{*/
-        $request = $loader->loadRequest();
+        if (!$container instanceof \Vine\Component\Container\Web) {
+            throw new \Exception($container.' must instanceof \Vine\Component\Container\Web');
+        }
+
+        $request = $container->getRequest();
+
         $controllerNameActionName = $this->parseControllerNameActionName($request);
         $controllerName = $controllerNameActionName['controllerName'];
         $actionName     = $controllerNameActionName['actionName'];
 
-        $controller = $this->loadController($appName, $moduleName, $controllerName, $actionName);
-        $response   = $this->loadResponse($loader);
-        $view       = $loader->loadView();
-
-        $controller->setRequest($request);
-        $controller->setResponse($response);
-        $controller->setView($view);
-
-        if (!method_exists($controller, $actionName)) {
-            throw new \Exception("Action $actionName not exists");
-        }
-
-        $controller->beforeAction();
-        $controller->$actionName();
-        $controller->afterAction();
-        $controller->autoRender();
+        $dispatcher = new \Vine\Component\Controller\Dispatcher();
+        $response   = $dispatcher->dispatch($appName, $moduleName, $controllerName, $actionName, $container);
 
         return $response;
     }/*}}}*/
@@ -51,14 +42,14 @@ class Mvc extends \Vine\Component\Routing\Route\Base
     {/*{{{*/
         $controllerName = isset($this->userDefined['controllerName']) ? $this->userDefined['controllerName'] : '';
         $actionName     = isset($this->userDefined['actionName']) ? $this->userDefined['actionName'] : '';
-        if ('' == $controllerName || '' == $actionName) {
+        if ($controllerName == '' || $actionName == '') {
             $uri     = trim($request->getUri(), '/');
-            $uriData = ('' == $uri) ? array() : explode('/', $uri);
+            $uriData = ($uri == '') ? array() : explode('/', $uri);
 
-            if ('' == $controllerName) {
+            if ($controllerName == '') {
                 $controllerName = isset($uriData[0]) ? $uriData[0] : self::DEF_CONTROLLER_NAME;
             }
-            if ('' == $actionName) {
+            if ($actionName == '') {
                 $actionName = isset($uriData[1]) ? $uriData[1] : self::DEF_ACTION_NAME;
             }
         }
@@ -66,30 +57,5 @@ class Mvc extends \Vine\Component\Routing\Route\Base
             'controllerName' => lcfirst($controllerName),
             'actionName'     => lcfirst($actionName),
         );
-    }/*}}}*/
-    private function loadController($appName, $moduleName, $controllerName, $actionName)
-    {/*{{{*/
-        $clsName = '\\'.ucfirst($appName).'\Controller\\';
-        $clsName.= ucfirst($moduleName).'\\'.ucfirst($controllerName);
-        if (!class_exists($clsName)) {
-            throw new \Exception("Controller $clsName not exists");
-        }
-
-        $controller = new $clsName($moduleName, $controllerName, $actionName);
-        if (!$controller instanceof \Vine\Component\Controller\ControllerInterface) {
-            throw new \Exception($clsName.' must be an instance of \Vine\Component\Controller\ControllerInterface');
-        }
-
-        return $controller;
-    }/*}}}*/
-    private function loadResponse($loader)
-    {/*{{{*/
-        $response = $loader->loadResponse();
-        if (is_null($response)) {
-            $response = new \Vine\Component\Http\Response();
-            $loader->setResponse($response);
-        }
-
-        return $response;
     }/*}}}*/
 }/*}}}*/

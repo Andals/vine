@@ -11,13 +11,13 @@ namespace Vine\Component\Http;
 /**
     * This is default request
  */
-class Request implements \Vine\Component\Http\RequestInterface
+class Request implements RequestInterface
 {/*{{{*/
 
     /**
         * {@inheritdoc}
      */
-    public function getParam($key, $default=null)
+    public function getParam($key, $default = null)
     {/*{{{*/
         $value = null;
 

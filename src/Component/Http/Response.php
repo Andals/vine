@@ -11,7 +11,7 @@ namespace Vine\Component\Http;
 /**
     * This is default response
  */
-class Response implements \Vine\Component\Http\ResponseInterface
+class Response implements ResponseInterface
 {/*{{{*/
     private $body = '';
 

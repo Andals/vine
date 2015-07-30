@@ -21,16 +21,16 @@ interface RouteInterface
         *
         * @return 
      */
-    public function setUserDefined($userDefined=null);
+    public function setUserDefined($userDefined = null);
 
     /**
         * After router find a route, go for it.
         *
         * @param string $appName
         * @param string $moduleName
-        * @param \Vine\Component\Routing\Loader $moduleName
+        * @param mixed $container
         *
         * @return \Vine\Component\Http\ResonseInterface
      */
-    public function go($appName, $moduleName, \Vine\Component\Loader\Base $loader);
+    public function go($appName, $moduleName, $container);
 }/*}}}*/

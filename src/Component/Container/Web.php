@@ -1,14 +1,17 @@
 <?php
 /**
-* @file WebApp.php
+* @file Web.php
 * @author ligang
 * @version 1.0
-* @date 2015-07-24
+* @date 2015-07-28
  */
 
-namespace Vine\Component\Loader;
+namespace Vine\Component\Container;
 
-class WebApp extends \Vine\Component\Loader\Base
+/**
+    * Web container
+ */
+class Web extends Obj
 {/*{{{*/
     const KEY_REQUEST  = 'request';
     const KEY_ROUTER   = 'router';
@@ -24,7 +27,7 @@ class WebApp extends \Vine\Component\Loader\Base
      */
     public function setRequest(\Vine\Component\Http\RequestInterface $request)
     {/*{{{*/
-        $this->container->add($request, self::KEY_REQUEST);
+        $this->add($request, self::KEY_REQUEST);
     }/*}}}*/
 
     /**
@@ -32,9 +35,9 @@ class WebApp extends \Vine\Component\Loader\Base
         *
         * @return \Vine\Component\Http\RequestInterface
      */
-    public function loadRequest()
+    public function getRequest()
     {/*{{{*/
-        return $this->container->get(self::KEY_REQUEST);
+        return $this->get(self::KEY_REQUEST);
     }/*}}}*/
 
     /**
@@ -46,7 +49,7 @@ class WebApp extends \Vine\Component\Loader\Base
      */
     public function setResponse(\Vine\Component\Http\ResponseInterface $response)
     {/*{{{*/
-        $this->container->add($response, self::KEY_RESPONSE);
+        $this->add($response, self::KEY_RESPONSE);
     }/*}}}*/
 
     /**
@@ -54,9 +57,9 @@ class WebApp extends \Vine\Component\Loader\Base
         *
         * @return \Vine\Component\Http\ResponseInterface
      */
-    public function loadResponse()
+    public function getResponse()
     {/*{{{*/
-        return $this->container->get(self::KEY_RESPONSE);
+        return $this->get(self::KEY_RESPONSE);
     }/*}}}*/
     
     /**
@@ -68,7 +71,7 @@ class WebApp extends \Vine\Component\Loader\Base
      */
     public function setRouter(\Vine\Component\Routing\RouterInterface $router)
     {/*{{{*/
-        $this->container->add($router, self::KEY_ROUTER);
+        $this->add($router, self::KEY_ROUTER);
     }/*}}}*/
 
     /**
@@ -76,9 +79,9 @@ class WebApp extends \Vine\Component\Loader\Base
         *
         * @return \Vine\Component\Routing\RouterInterface
      */
-    public function loadRouter()
+    public function getRouter()
     {/*{{{*/
-        return $this->container->get(self::KEY_ROUTER);
+        return $this->get(self::KEY_ROUTER);
     }/*}}}*/
 
     /**
@@ -90,7 +93,7 @@ class WebApp extends \Vine\Component\Loader\Base
      */
     public function setView(\Vine\Component\View\ViewInterface $view)
     {/*{{{*/
-        $this->container->add($view, self::KEY_VIEW);
+        $this->add($view, self::KEY_VIEW);
     }/*}}}*/
     
     /**
@@ -98,8 +101,8 @@ class WebApp extends \Vine\Component\Loader\Base
         *
         * @return \Vine\Component\View\ViewInterface
      */
-    public function loadView()
+    public function getView()
     {/*{{{*/
-        return $this->container->get(self::KEY_VIEW);
+        return $this->get(self::KEY_VIEW);
     }/*}}}*/
 }/*}}}*/

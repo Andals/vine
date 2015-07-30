@@ -5,24 +5,23 @@ vine=$PWD in=tool/in.vim {
   Component=Component {
    Bootstrap=Bootstrap {
     Base.php
+    Web.php
    }
    Container=Container {
     ContainerInterface.php
     Obj.php
+    Web.php
    }
    Controller=Controller {
     Base.php
     ControllerInterface.php
+    Dispatcher.php
    }
    Http=Http {
     Request.php
     RequestInterface.php
     Response.php
     ResponseInterface.php
-   }
-   Loader=Loader {
-    Base.php
-    WebApp.php
    }
    Routing=Routing {
     Router.php

@@ -11,14 +11,14 @@ namespace Vine\Component\Routing\Route;
 /**
     * Base route
  */
-abstract class Base implements \Vine\Component\Routing\Route\RouteInterface
+abstract class Base implements RouteInterface
 {/*{{{*/
     protected $userDefined = null;
 
     /**
         * {@inheritdoc}
      */
-    public function setUserDefined($userDefined=null)
+    public function setUserDefined($userDefined = null)
     {/*{{{*/
         $this->userDefined = $userDefined;
     }/*}}}*/

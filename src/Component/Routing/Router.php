@@ -11,7 +11,7 @@ namespace Vine\Component\Routing;
 /**
     * This is default router
  */
-class Router implements \Vine\Component\Routing\RouterInterface
+class Router implements RouterInterface
 {/*{{{*/
     private $routeTable   = array();
     private $defaultRoute = array();
@@ -27,7 +27,7 @@ class Router implements \Vine\Component\Routing\RouterInterface
     /**
         * {@inheritdoc}
      */
-    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined=null)
+    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined = null)
     {/*{{{*/
         $this->routeTable[] = array(
             'rule'          => $rule,
@@ -39,7 +39,7 @@ class Router implements \Vine\Component\Routing\RouterInterface
     /**
         * {@inheritdoc}
      */
-    public function setDefaultRoute($routeClsName, $userDefined=null)
+    public function setDefaultRoute($routeClsName, $userDefined = null)
     {/*{{{*/
         $this->defaultRoute = array(
             'routeClsName'  => $routeClsName,

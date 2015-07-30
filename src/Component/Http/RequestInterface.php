@@ -22,7 +22,7 @@ interface RequestInterface
         *
         * @return 
      */
-    public function getParam($key, $default=null);
+    public function getParam($key, $default = null);
 
     /**
         * Get http uri, same as nginx's $uri($request_uri without query string)

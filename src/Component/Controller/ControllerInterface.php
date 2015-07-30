@@ -27,7 +27,7 @@ interface ControllerInterface
      * set view object which is used to render template.
      * @param \Vine\Component\View\ViewInterface $view view object.
      */
-    public function setView(\Vine\Component\View\ViewInterface $view=null);
+    public function setView(\Vine\Component\View\ViewInterface $view = null);
 
     /**
      * set request object.

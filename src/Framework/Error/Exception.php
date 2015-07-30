@@ -16,7 +16,7 @@ class Exception extends \Exception
 {/*{{{*/
 	protected $ext = null;
 
-    public function __construct($errno, $msg='', $ext=null)
+    public function __construct($errno, $msg = '', $ext = null)
     {/*{{{*/
         parent::__construct($msg, $errno);
 

@@ -11,58 +11,74 @@ namespace Vine\Framework\App;
 /**
     * This is app for web which has view
  */
-final class Web extends \Vine\Framework\App\Base
+final class Web extends Base
 {/*{{{*/
+
+    /**
+        * {@inheritdoc}
+     */
+    public function bootStrap($bootstrap)
+    {/*{{{*/
+        if (!$bootstrap instanceof \Vine\Component\Bootstrap\Web) {
+            throw new \Vine\Framework\Error\Exception(
+                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
+                get_class($bootstrap).' must instanceof \Vine\Component\Bootstrap\Web'
+            );
+        }
+
+        $bootstrap->boot($this->container);
+
+        return $this;
+    }/*}}}*/
 
     /**
         * {@inheritdoc}
      */
     public function run($moduleName)
     {/*{{{*/
-        $request = $this->loadRequest();
-        $route   = $this->loadRouter()->forward($request);
+        $this->initComponents();
 
-        $response = $route->go($this->appName, $moduleName, $this->loader);
+        $request = $this->container->getRequest();
+        $route   = $this->container->getRouter()->forward($request);
+
+        $response = $route->go($this->appName, $moduleName, $this->container);
         if ($response instanceof \Vine\Component\Http\ResponseInterface) {
             $response->send();
         }
     }/*}}}*/
 
 
-    protected function getLoader()
+    protected function getContainer()
     {/*{{{*/
-        return new \Vine\Component\Loader\WebApp(new \Vine\Component\Container\Obj());
+        return new \Vine\Component\Container\Web();
     }/*}}}*/
 
 
-    private function loadRequest()
+    private function initComponents()
     {/*{{{*/
-        $request = $this->loader->loadRequest();
-        if (is_null($request)) {
+        $this->initRequest();
+        $this->initRouter();
+        $this->initResponse();
+    }/*}}}*/
+    private function initRequest()
+    {/*{{{*/
+        if (!$this->container->have(\Vine\Component\Container\Web::KEY_REQUEST)) {
             $request = new \Vine\Component\Http\Request();
-            $this->loader->setRequest($request);
+            $this->container->setRequest($request);
         }
-
-        return $request;
     }/*}}}*/
-    private function loadResponse()
+    private function initRouter()
     {/*{{{*/
-        $response = $this->loader->loadResponse();
-        if (is_null($response)) {
-            $response = new \Vine\Component\Http\Response();
-            $this->loader->setResponse($response);
-        }
-
-        return $response;
-    }/*}}}*/
-    private function loadRouter()
-    {/*{{{*/
-        $router = $this->loader->loadRouter();
-        if (is_null($router)) {
+        if (!$this->container->have(\Vine\Component\Container\Web::KEY_ROUTER)) {
             $router = new \Vine\Component\Routing\Router();
-            $this->loader->setRouter($router);
+            $this->container->setRouter($router);
         }
-
-        return $router;
+    }/*}}}*/
+    private function initResponse()
+    {/*{{{*/
+        if (!$this->container->have(\Vine\Component\Container\Web::KEY_RESPONSE)) {
+            $response = new \Vine\Component\Http\Response();
+            $this->container->setResponse($response);
+        }
     }/*}}}*/
 }/*}}}*/

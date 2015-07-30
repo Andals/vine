@@ -9,7 +9,7 @@
 
 namespace Vine\Component\Controller;
 
-abstract class Base implements \Vine\Component\Controller\ControllerInterface
+abstract class Base implements ControllerInterface
 {
     /**  
      * @var string current module name.
@@ -34,7 +34,7 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     /**  
      * @var boolean whether render view or not.
      */
-    protected $isViewRender = true;
+    protected $needViewRender;
 
     /**  
      * @var \Vine\Component\Http\RequestInterface request object.
@@ -51,17 +51,20 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
      */
     public function __construct($moduleName, $controllerName, $actionName)
     {
-        $this->moduleName = lcfirst($moduleName);
+        $this->moduleName     = lcfirst($moduleName);
         $this->controllerName = $controllerName;
-        $this->actionName = $actionName;
+        $this->actionName     = $actionName;
+        $this->needViewRender = false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setView(\Vine\Component\View\ViewInterface $view=null)
+    public function setView(\Vine\Component\View\ViewInterface $view = null)
     {
         $this->view = $view;
+
+        $this->needViewRender = is_null($view) ? false : true;
     }
 
     /**
@@ -80,68 +83,11 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
         $this->response = $response;
     }
 
-    /**
-     * set whether to render view or not.
-     * true indicates the action will render view, false not.
-     * @param boolean $isRender whether to render view or not.
-     */
-    public function setViewRender($isRender)
-    {
-        $this->isViewRender = $isRender;
-    }
-
-    /**
-     * render data into template and return generated html.
-     * @param string $tpl template name.
-     * If empty string is given, the template with action name will be rendered.
-     * @param boolean $withViewSuffix whether parameter $tpl with suffix or not.Default to be false.
-     * EXAMPLE:If $tpl='index.php', $withViewSuffix should be true.
-     *         If $tpl='index', $withViewSuffix should be false.
-     * @param array $data data to render into template.
-     * @return string|boolean generated html or false if $isViewRender set to false. 
-     */
-    public function render($tpl = '', $withViewSuffix = false, array $data = array())
-    {
-        if ($this->isViewRender === true) {
-            $tplFolder = $this->moduleName . '/' . $this->controllerName . '/';
-            if ($tpl != '') {
-                $tplPath = $tplFolder . $tpl;
-            } else {
-                $tplPath = $tplFolder . $this->actionName;
-            }
-            return $this->view->render($tplPath, $withViewSuffix, $data);
-        }
-        return false;
-    }
-
-    /**
-     * render data into template and set generated html into response object.
-     * @param string $tpl template name.
-     * @param boolean $withViewSuffix.
-     * @param array $data data to render into template.
-     */
-    public function display($tpl = '', $withViewSuffix = false, array $data = array())
-    {
-        $content = $this->render($tpl, $withViewSuffix, $data);
-        if ($content !== false) {
-            $this->response->setBody($content);
-        }
-    }
-
-    /**  
-     * {@inheritdoc}
-     */
-    public function autoRender()
-    {
-        $this->display();
-    }
-
     /**  
      * {@inheritdoc}
      */
     public function beforeAction()
     {
-        return true;
     }
 
     /**  
@@ -150,6 +96,17 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     public function afterAction()
     {
     }
+
+    /**  
+     * {@inheritdoc}
+     */
+    public function autoRender()
+    {
+        $tpl = $this->moduleName . '/' . $this->controllerName . '/' . $this->actionName;
+
+        $this->display($tpl);
+    }
+
 
     /**
      * assign data into template.
@@ -164,13 +121,16 @@ abstract class Base implements \Vine\Component\Controller\ControllerInterface
     }
 
     /**
-     * redirect to destination url.
-     * @see \Vine\Component\Http\Response::redirect() for detail information.
-     * @param string $url redirect destination.
+     * render data into template and set generated html into response object.
+     * @param string $tpl template name.
+     * @param boolean $withViewSuffix.
+     * @param array $data data to render into template.
      */
-    protected function redirect($url)
-    {   
-        $this->response->redirect($url);
+    protected function display($tpl, $withViewSuffix = false)
+    {
+        $content = $this->view->render($tpl, $withViewSuffix);
+        if ($content !== false) {
+            $this->response->setBody($content);
+        }
     }
-
 }

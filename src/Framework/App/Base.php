@@ -13,8 +13,17 @@ namespace Vine\Framework\App;
  */
 abstract class Base
 {/*{{{*/
-    protected $appName = '';
-    protected $loader  = null;
+    protected $appName   = '';
+    protected $container = null;
+
+    /**
+        * Run bootstrap
+        *
+        * @param mixed $bootstrap
+        *
+        * @return \Vine\Framework\App\Base
+     */
+    abstract public function bootstrap($bootstrap);
 
     /**
         * Run app process
@@ -26,30 +35,16 @@ abstract class Base
     abstract public function run($moduleName);
 
     /**
-        * Get app loader
+        * Get app container
         *
-        * @return \Vine\Component\Loader\Base
+        * @return \Vine\Component\Container\Base
      */
-    abstract protected function getLoader();
+    abstract protected function getContainer();
 
 
     public function __construct($appName)
     {/*{{{*/
-        $this->appName = $appName;
-        $this->loader  = $this->getLoader();
-    }/*}}}*/
-
-    /**
-        * Run bootstrap
-        *
-        * @param \Vine\Component\Bootstrap\Base $bootstrap
-        *
-        * @return \Vine\Framework\App\Base
-     */
-    final public function bootStrap(\Vine\Component\Bootstrap\Base $bootstrap)
-    {/*{{{*/
-        $bootstrap->boot($this->loader);
-
-        return $this;
+        $this->appName   = $appName;
+        $this->container = $this->getContainer();
     }/*}}}*/
 }/*}}}*/

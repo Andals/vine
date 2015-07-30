@@ -9,7 +9,7 @@
 namespace Vine\Component\Bootstrap;
 
 /**
-    * App bootstrap
+    * Bootstrap base
  */
 abstract class Base
 {/*{{{*/
@@ -17,18 +17,18 @@ abstract class Base
     /**
         * Run every protected function which name has prefix init
         *
-        * @param \Vine\Component\Loader\Base $loader
+        * @param mixed container
         *
         * @return 
      */
-    final public function boot(\Vine\Component\Loader\Base $loader)
+    public function boot($container)
     {/*{{{*/
         $ref = new \ReflectionClass($this);
 
         foreach ($ref->getMethods(\ReflectionMethod::IS_PROTECTED) as $method) {
             $func = $method->name;
             if (preg_match('/^init[A-Z]/', $func)) {
-                $this->$func($loader);
+                $this->$func($container);
             }
         }
     }/*}}}*/
