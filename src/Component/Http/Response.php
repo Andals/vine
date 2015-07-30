@@ -429,6 +429,11 @@ class Response implements \Vine\Component\Http\ResponseInterface
 
             $this->body->send($this->request, $this);
         } else {
+            $this->body = (string) $this->body;
+
+            foreach ($this->outputFilters as $outputFilter) {
+                $this->body = $outputFilter($this->body);
+            }
             echo $this->body;
         }        
         return $this->body;
