@@ -25,7 +25,7 @@ vine=$PWD in=tool/in.vim {
    }
    Mysql=Mysql {
     Driver.php
-    Knowledge.php
+    Error.php
    }
    Routing=Routing {
     Router.php
@@ -53,6 +53,26 @@ vine=$PWD in=tool/in.vim {
    Error=Error {
     Errno.php
     Exception.php
+   }
+  }
+ }
+ tests=tests {
+  bootstrap.php
+  TestCase=TestCase {
+   View=View {
+    SimpleTest.php
+    view=view {
+     simple=simple {
+      assign_array_value.php
+      assign_array_value_with_filter.php
+      assign_string_value.php
+      assign_string_value_with_filter.php
+      render.php
+      render.suffix
+      render_data.php
+      render_in_render.php
+     }
+    }
    }
   }
  }

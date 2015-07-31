@@ -1,14 +1,18 @@
 <?php
 /**
-* @file Knowledge.php
+* @file Error.php
 * @author ligang
 * @version 1.0
-* @date 2015-07-27
+* @date 2015-07-31
  */
 
 namespace Vine\Component\Mysql;
 
-class Knowledge
+
+/**
+    * This class identify mysql error
+ */
+class Error
 {/*{{{*/
     const DUPLICATE_ENTRY_CODE         = 23000;
     const FOREIGN_KEY_CONSTRAINT_FAILS = 'foreign key constraint fails';
@@ -16,24 +20,25 @@ class Knowledge
     const LOST_CONNECTION              = 'SQLSTATE[HY000]: General error: 2013 Lost connection to MySQL server during query';
     const GONE_AWAY                    = 'SQLSTATE[HY000]: General error: 2006 MySQL server has gone away';
 
+
     public static function duplicateEntry($e)
     {/*{{{*/
-        return (self::DUPLICATE_ENTRY_CODE == $e->getCode()) ? true : false;
+        return ($e->getCode() == self::DUPLICATE_ENTRY_CODE) ? true : false;
     }/*}}}*/
     public static function foreignKeyConstraintFails($e)
     {/*{{{*/
-        return (false === strpos($e->getMessage(), self::FOREIGN_KEY_CONSTRAINT_FAILS)) ? false : true;
+        return (strpos($e->getMessage(), self::FOREIGN_KEY_CONSTRAINT_FAILS) === false) ? false : true;
     }/*}}}*/
     public static function lostConnection($e)
     {/*{{{*/
-        return (self::LOST_CONNECTION == $e->getMessage()) ? true : false;
+        return ($e->getMessage() == self::LOST_CONNECTION) ? true : false;
     }/*}}}*/
     public static function lockWaitTimeout($e)
     {/*{{{*/
-        return (self::LOCK_WAIT_TIMEOUT == $e->getMessage()) ? true : false;
+        return ($e->getMessage() == self::LOCK_WAIT_TIMEOUT) ? true : false;
     }/*}}}*/
     public static function goneAway($e)
     {/*{{{*/
-        return (self::GONE_AWAY == $e->getMessage()) ? true : false;
+        return ($e->getMessage() == self::GONE_AWAY) ? true : false;
     }/*}}}*/
 }/*}}}*/

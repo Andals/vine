@@ -8,6 +8,9 @@
 
 namespace Vine\Component\Mysql;
 
+/**
+    * This is mysql driver
+ */
 class Driver
 {/*{{{*/
     const CONN_LONG  = true;
@@ -15,13 +18,21 @@ class Driver
 
 	const DEF_CHARSET = 'UTF8';
 
+
     private $dbConf = array();
     private $logger = null;
 
+    private $dsn = '';
+    private $pdo = null;
 
-    public function __construct($dbConf, $logger=null)
+
+    public function __construct($dbConf, $logger = null)
     {/*{{{*/
         $this->initDbConf($dbConf);
+        $this->logger = $logger;
+
+        $this->initDsn();
+        $this->initConnect();
     }/*}}}*/
 
 
@@ -37,42 +48,37 @@ class Driver
             'charset' => isset($dbConf['charset']) ? $dbConf['charset'] : self::DEF_CHARSET,
         );
     }/*}}}*/
-
-    private function connect()
+    private function initDsn()
     {/*{{{*/
-        $dsn = 'mysql:host='.$this->dbConf['host'].';dbname='.$this->dbConf['name'];
-        if (0 != $this->dbConf['port']) {
-            $dsn.= ';port='.$this->dbConf['port'];
+        $this->dsn = 'mysql:host='.$this->dbConf['host'].';dbname='.$this->dbConf['name'];
+        if ($this->dbConf['port'] != 0) {
+            $this->dsn.= ';port='.$this->dbConf['port'];
         }
-        try
-        {
-            $this->dbh = new \PDO(
-                $dsn,
-                $this->dbConf['user'],
-                $this->dbConf['pass'],
-                array(
-                    \PDO::ATTR_PERSISTENT => $this->dbConf['ctype']
-                )
-            );
-        }
-        catch(\PDOException $e)
-        {
-            if(\YueYue\Knowledge\Pdo::lostConnection($e))
-            {
-                $this->dbh = new \PDO($dsn, $this->dbConf['user'], $this->dbConf['pass'],
-                    array(\PDO::ATTR_PERSISTENT => $this->dbConf['ctype']));
-            }
-            else
-            {
+    }/*}}}*/
+    private function initConnect()
+    {/*{{{*/
+        try {
+            $this->initPdo();
+        } catch(\PDOException $e) {
+            if(Error::lostConnection($e)) {
+                $this->initPdo();
+            } else {
                 throw $e;
             }
         }
-        $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->dbh->query('SET NAMES '.$this->dbConf['charset']);
+
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->pdo->query('SET NAMES '.$this->dbConf['charset']);
     }/*}}}*/
-    private function reconnect()
+    private function initPdo()
     {/*{{{*/
-        $this->dbh = null;
-        $this->connect();
+        $this->pdo = new \PDO(
+            $this->dsn,
+            $this->dbConf['user'],
+            $this->dbConf['pass'],
+            array(
+                \PDO::ATTR_PERSISTENT => $this->dbConf['ctype'],
+            )
+        );
     }/*}}}*/
 }/*}}}*/
