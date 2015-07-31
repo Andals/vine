@@ -45,8 +45,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->conf->setParamErrorException($name, '\Exception', '1003', '应用名称不正确');        
 
         $_GET = [
+            'appdesc' => 'framework',
             'app_name' => 'vine',
-            'app_desc' => 'framework',
+            
         ];
         $validator->conf->parseRequestParams();
         $this->assertEquals(array('app_name'=>'vine'), $validator->conf->getRequestParams());

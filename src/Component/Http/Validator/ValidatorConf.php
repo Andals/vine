@@ -232,7 +232,7 @@ class ValidatorConf
      * @param  mixed $default  default value
      * @return mixed          
      */
-    private function getParam($key = '', $default = NULL)
+    private function getParam($key = null, $default = null)
     {
         return $this->request->getParam($key, $default);
     }
@@ -243,10 +243,10 @@ class ValidatorConf
      * @param  mixed $default default value
      * @return mixed          
      */
-    private function getStrParam($key = '', $default = NULL)
+    private function getStrParam($key = null, $default = null)
     {
         $value = $this->getParam($key, $default);
-        return is_null($value) ? NULL : trim($value);
+        return is_null($value) ? null : trim($value);
     }
 
     /**
@@ -255,7 +255,7 @@ class ValidatorConf
      * @param  mixed $default default value
      * @return mixed           
      */
-    private function getNumParam($key = '', $default = 0)
+    private function getNumParam($key = null, $default = 0)
     {
         $value = $this->getParam($key, $default);
         return is_null($value) ? NULL : intval($value);
@@ -267,10 +267,10 @@ class ValidatorConf
      * @param  mixed  $default default value
      * @return mixed          
      */
-    private function getArrParam($key = '', $default = array())
+    private function getArrParam($key = null, $default = array())
     {
         $value = $this->getParam($key, $default);
-        return is_null($value) ? NULL : $this->fmtArrValue($value);
+        return is_null($value) ? null : $this->fmtArrValue($value);
     }
 
     /**

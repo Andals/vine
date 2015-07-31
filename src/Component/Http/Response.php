@@ -39,7 +39,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
      */
 
     protected $statusCodes = array
-    (
+    (/*{{{*/
         // 1xx Informational
 
         100 => 'Continue',
@@ -115,7 +115,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
         510 => 'Not Extended',
         511 => 'Network Authentication Required',
         530 => 'User access denied',
-    );
+    );/*}}}*/
 
     public function __construct(\Vine\Component\Http\Request $request, $charset = 'UTF-8')
     {

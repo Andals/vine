@@ -100,12 +100,6 @@ class Url
             $this->fragment = isset($p['fragment']) ? rawurldecode($p['fragment']) : '';
 
         } 
-        /* 是否有必要？以及实现方案 */
-        elseif ($url instanceof self) {
-            foreach ($this as $key => $val) {
-                $this->$key = $url->$key;
-            }
-        }
     }
 
 
@@ -425,9 +419,6 @@ class Url
     public static function parseQuery($s)
     {
         parse_str($s, $res);
-        if (get_magic_quotes_gpc()) { // for PHP 5.3
-            $res = \Vine\Component\Http\Helpers::stripSlashes($res);
-        }
         return $res;
     }    
 }

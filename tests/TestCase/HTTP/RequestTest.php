@@ -108,9 +108,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testHTTPRequestRawBodyDetector()
     {
-        $httpRequest = new \Vine\Component\Http\Request(new \Vine\Component\Http\UrlScript, NULL, NULL, NULL, NULL, NULL, function () {
-            return 'raw_body';
-        });
+        $httpRequest = new \Vine\Component\Http\Request(new \Vine\Component\Http\UrlScript, NULL, NULL, NULL, NULL, NULL, 'raw_body');
         $this->assertEquals('raw_body', $httpRequest->getRawBody());
     }
 }

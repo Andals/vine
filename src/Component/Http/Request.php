@@ -32,10 +32,10 @@ class Request implements RequestInterface
     /** @var string|null */
     private $remoteHost;
 
-    /** @var callable|null */
-    private $rawBodyCallback;
+    /** @var string|null */
+    private $rawBody;
 
-    public function __construct(UrlScript $url, $post = null, $headers = null, $method = null, $remoteAddress = null, $remoteHost = null, $rawBodyCallback = null) 
+    public function __construct(UrlScript $url, $post = null, $headers = null, $method = null, $remoteAddress = null, $remoteHost = null, $rawBody = null) 
     {
         $this->url = $url;
         $this->post = (array) $post;
@@ -43,7 +43,7 @@ class Request implements RequestInterface
         $this->method = $method ?: 'GET';
         $this->remoteAddress = $remoteAddress;
         $this->remoteHost = $remoteHost;
-        $this->rawBodyCallback = $rawBodyCallback;
+        $this->rawBody = $rawBody;
     }
 
 
@@ -53,7 +53,6 @@ class Request implements RequestInterface
      */
     public function getUrl()
     {
-        // FIXED: 是否需要clone
         return clone $this->url;
     }
 
@@ -102,20 +101,17 @@ class Request implements RequestInterface
      * @param  mixed $default 
      * @return mixed          
      */
-    // FIXED: 通过Query Post获取
     public function getParam($key = null, $default = null)
     {
-        if('' == $key) {
+        if ($key === null) {
             return array_merge($_GET, $_POST);
         }
-        $value = '';
-        if(isset($_GET[$key])) {
+        $value = $default;
+        if (isset($_GET[$key])) {
             $value = $_GET[$key];
-        } else if(isset($_POST[$key])) {
+        } else if (isset($_POST[$key])) {
             $value = $_POST[$key];
-        } else {
-            $value = $default;
-        }
+        } 
         return $value;
     }
 
@@ -233,7 +229,7 @@ class Request implements RequestInterface
      */
     public function getRawBody()
     {
-        return $this->rawBodyCallback ? call_user_func($this->rawBodyCallback) : null;
+        return $this->rawBody;
     }    
 
 }/*}}}*/

@@ -14,15 +14,18 @@ namespace Vine\Component\Http;
  */
 class RequestFactory
 {
-
-    public function createHttpRequest()
+    /**
+     * build current request url part
+     * @return url instance 
+     */
+    private function buildRequestUrl() 
     {
         $url = new \Vine\Component\Http\UrlScript;
         $url->setScheme(!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https' : 'http');
         $url->setUser(isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '');
-        $url->setPassword(isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '');
+        $url->setPassword(isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '');       
 
-        //  HOST & PORT
+        // set host and port
         if ((isset($_SERVER[$tmp = 'HTTP_HOST']) || isset($_SERVER[$tmp = 'SERVER_NAME']))
             && preg_match('#^([a-z0-9_.-]+|\[[a-f0-9:]+\])(:\d+)?\z#i', $_SERVER[$tmp], $pair)
         ) {
@@ -32,23 +35,23 @@ class RequestFactory
             } elseif (isset($_SERVER['SERVER_PORT'])) {
                 $url->setPort($_SERVER['SERVER_PORT']);
             }
-        }
+        }         
 
-        // PATH & QUERY
+        // set path and query
         $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
         $tmp = explode('?', $requestUrl, 2);
         $path = $tmp[0]; // unescape?
         $url->setPath($path);
-        $url->setQuery(isset($tmp[1]) ? $tmp[1] : '');
+        $url->setQuery(isset($tmp[1]) ? $tmp[1] : '');  
+        return $url;      
+    }
 
-        //  GET, POST
-        $query = $url->getQueryParameters();
-        $post = empty($_POST) ? array() : $_POST;        
-        // TODO: remove invalid characters
-        $url->setQuery($query);
-
-
-        // HEADERS
+    /**
+     * build current request header part
+     * @return array 
+     */
+    private function buildRequestHeader()
+    {
         $headers = array();
         foreach ($_SERVER as $k => $v) {
             if (strncmp($k, 'HTTP_', 5)) {
@@ -57,32 +60,38 @@ class RequestFactory
                 continue;
             }
             $headers[ strtr($k, '_', '-') ] = $v;
-        }
+        }        
+        return $headers;
+    }
 
-        $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-        $remoteHost = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
-
-        // TODO: proxy's remoteaddr remotehost
-        
+    /**
+     * build current request method part
+     * @return string 
+     */
+    private function buildRequestMethod()
+    {
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null;
         if ($method === 'POST' && isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']) 
             && preg_match('#^[A-Z]+\z#', $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])
         ) {
             $method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
         }
+        return $method;        
+    }
 
-        // RAW BODY
-        $rawBodyCallback = function() {
-            static $rawBody;
-            // FIXED
-            if (PHP_VERSION_ID >= 50600) {
-                return file_get_contents('php://input');
-            } elseif ($rawBody === null) {
-                $rawBody = (string) file_get_contents('php://input');
-            }
-            return $rawBody;
-        };
-
-        return new \Vine\Component\Http\Request($url, $post, $headers, $method, $remoteAddr, $remoteHost, $rawBodyCallback);
+    /**
+     * factory to create current request instance
+     * @return request instance 
+     */
+    public function createHttpRequest()
+    {
+        $url = $this->buildRequestUrl();
+        $post = empty($_POST) ? array() : $_POST; 
+        $headers = $this->buildRequestHeader();
+        $method = $this->buildRequestMethod();
+        $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $remoteHost = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
+        $rawBody = file_get_contents('php://input');
+        return new \Vine\Component\Http\Request($url, $post, $headers, $method, $remoteAddr, $remoteHost, $rawBody);
     }
 }

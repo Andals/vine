@@ -104,6 +104,8 @@ class JsonResponse implements ResponseContainerInterface
             $response->setContentType('application/json');
             $response->setBody($this->data);
         }  
+
+        $response->send();
     }
 
 }
