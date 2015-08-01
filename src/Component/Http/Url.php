@@ -273,7 +273,7 @@ class Url
      */
     public function getQuery()
     {
-        return http_build_query($this->query, '', '&', PHP_QUERY_RFC3986);
+        return http_build_query($this->query);
     }
 
 

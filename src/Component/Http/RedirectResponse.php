@@ -21,13 +21,13 @@ class RedirectResponse extends \Vine\Component\Http\Response
      * @param int     $status  The status code (302 by default)
      * @param array   $headers 
      */
-    public function __construct($url, $status = 302, $headers = array())
+    public function __construct($url, $status = 302)
     {
         if (empty($url)) {
             throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
         }
 
-        parent::__construct('', $status, $headers);
+        parent::__construct('', $status);
 
         $this->setTargetUrl($url);
     }
@@ -35,9 +35,9 @@ class RedirectResponse extends \Vine\Component\Http\Response
     /**
      * {@inheritdoc}
      */
-    public static function create($url = '', $status = 302, $headers = array())
+    public static function create($url = '', $status = 302)
     {
-        return new static($url, $status, $headers);
+        return new static($url, $status);
     }
 
     /**

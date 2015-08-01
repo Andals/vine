@@ -32,6 +32,6 @@ class Validator
 
     public function __construct() {
         $request = new \Vine\Component\Http\RequestFactory();
-        $this->conf = new ValidatorConf($request->createHttpRequest());
+        $this->conf = new ValidatorConf($request->make());
     }
 }

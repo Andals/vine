@@ -1,6 +1,6 @@
 <?php
 
-namespace Vine\Test\TestCase\HTTP;
+namespace Vine\Test\TestCase\Http;
 
 
 /**
@@ -15,7 +15,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testHTTPValidatorSetterDetector()
+    public function testHttpValidatorSetterDetector()
     {
         $validator = new \Vine\Component\Http\Validator;
         $name = 'app_id';
@@ -34,7 +34,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('应用Id不正确', $validator->conf->getParamErrorMsg($name));
     }
 
-    public function testHTTPValidatorParseRequestDetector()
+    public function testHttpValidatorParseRequestDetector()
     {
         $validator = new \Vine\Component\Http\Validator;
         $name = 'app_name';
@@ -44,11 +44,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->conf->setParamErrorHanding($name, \Vine\Component\Http\Validator::ERROR_HANDING_EXCEPTION);
         $validator->conf->setParamErrorException($name, '\Exception', '1003', '应用名称不正确');        
 
-        $_GET = [
+        $_GET = array(
             'appdesc' => 'framework',
             'app_name' => 'vine',
             
-        ];
+        );
         $validator->conf->parseRequestParams();
         $this->assertEquals(array('app_name'=>'vine'), $validator->conf->getRequestParams());
         $this->assertArrayHasKey('app_name', $validator->conf->getRequestParams());

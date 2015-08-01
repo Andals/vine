@@ -1,9 +1,9 @@
 <?php
 
-namespace Vine\Test\TestCase\HTTP;
+namespace Vine\Test\TestCase\Http;
 
 use Vine\Component\Http\JsonResponse;
-
+use Vine\Component\Http\ResponseFactory;
 /**
 * Class TestResponse
 */
@@ -15,20 +15,20 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         
     }
 
-    public function testHTTPResponseBody()
+    public function testHttpResponseBody()
     {
         $response = new \Vine\Component\Http\Response();
         $response->setContent('Hello World');
         $this->assertEquals('Hello World', $response->getContent());
     }
 
-    public function testHTTPResponseBodyWithResponse()
+    public function testHttpResponseBodyWithResponse()
     {
         $response = new \Vine\Component\Http\Response();
         $response->setContent('Hello World');
     }
 
-    public function testHTTPResponseContentType()
+    public function testHttpResponseContentType()
     {
 
         $response = new \Vine\Component\Http\Response();
@@ -37,7 +37,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $response->getContentType());       
     }
 
-    public function testHTTPResponseContentTypeWithCharset()
+    public function testHttpResponseContentTypeWithCharset()
     {
         $response = new \Vine\Component\Http\Response();
         $response->setContentType('application/json', 'iso-8859-1');
@@ -45,7 +45,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('iso-8859-1', $response->getCharset());
     }
 
-    public function testHTTPResponseStatus()
+    public function testHttpResponseStatus()
     {
 
         $response = new \Vine\Component\Http\Response();
@@ -58,7 +58,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(404, $response->getStatus());        
     }
 
-    public function testHTTPResponseRedirect()
+    public function testHttpResponseRedirect()
     {
         // $redirectResponse = new \Vine\Component\Http\RedirectResponse('http://www.baidu.com');
         $redirectResponse = \Vine\Component\Http\RedirectResponse::create('http://www.baidu.com');
@@ -66,39 +66,25 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://www.baidu.com', $redirectResponse->getTargetUrl());
     }
 
-    public function testHTTPResponseJson()
-    {
-        // $factory = new \Vine\Component\Http\RequestFactory;
-        // $request = $factory->createHttpRequest();   
-
-        // $response = new \Vine\Component\Http\Response($request);
-        // $response->setBody($response->json(array('name'=>'liangchao')));
-        // $this->assertEquals('{"name":"liangchao"}', $response->send());        
-
-        // $response = new \Vine\Component\Http\Response($request);
-        // $response->setBody($response->jsonP(array('name'=>'liangchao')));
-        // $this->assertEquals('/**/_callback({"name":"liangchao"});', $response->send());            
-    }
-
-    public function testHTTPResponseJsonP()
+    public function testHttpResponseJsonP()
     {
         $response = new JsonResponse();
         $this->assertSame('[]', $response->getContent());
     }
 
-    public function testHTTPResponseJsonWithArray()
+    public function testHttpResponseJsonWithArray()
     {
         $response = new JsonResponse(array(0, 1, 2, 3));
         $this->assertSame('[0,1,2,3]', $response->getContent());
     }
 
-    public function testHTTPResponseJsonWithAssocArray()
+    public function testHttpResponseJsonWithAssocArray()
     {
         $response = new JsonResponse(array('foo' => 'bar'));
         $this->assertSame('{"foo":"bar"}', $response->getContent());
     }    
 
-    public function testHTTPResponseJsonWithSimpleTypes()
+    public function testHttpResponseJsonWithSimpleTypes()
     {
         $response = new JsonResponse('foo');
         $this->assertSame('"foo"', $response->getContent());
@@ -110,7 +96,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('true', $response->getContent());        
     }
 
-    public function testHTTPResponseJsonWithCustomStatus()
+    public function testHttpResponseJsonWithCustomStatus()
     {
         $response = new JsonResponse(true, 202);
         $this->assertSame(202, $response->getStatus());
@@ -129,5 +115,30 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('application/vnd.acme.blog-v1+json', $response->getContentType());
     }
 
+    public function testHttpResponseJsonPCallback()
+    {
+        $response = new JsonResponse(array('foo' => 'bar'));
+        $response->setCallback('_callback');
+        $this->assertEquals('/**/_callback({"foo":"bar"});', $response->getContent());
+    }
+
+    public function testHttpResponseFactory()
+    {
+        $responseFactory = new ResponseFactory();
+        $response = $responseFactory->make(123);
+        $this->assertEquals('123', $response->getContent());
+
+        $responseFactory = new ResponseFactory();
+        $response = $responseFactory->json(array('foo' => 'bar'));
+        $this->assertEquals('{"foo":"bar"}', $response->getContent());
+
+        $responseFactory = new ResponseFactory();
+        $response = $responseFactory->jsonp('_callback', array('foo' => 'bar'));
+        $this->assertEquals('/**/_callback({"foo":"bar"});', $response->getContent());
+
+        $responseFactory = new ResponseFactory();
+        $response = $responseFactory->redirect('http://www.baidu.com');
+        $this->assertEquals('http://www.baidu.com', $response->getTargetUrl());
+    }
 
 }

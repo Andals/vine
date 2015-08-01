@@ -83,7 +83,7 @@ class RequestFactory
      * factory to create current request instance
      * @return request instance 
      */
-    public function createHttpRequest()
+    public function make()
     {
         $url = $this->buildRequestUrl();
         $post = empty($_POST) ? array() : $_POST; 
