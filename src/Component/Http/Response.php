@@ -121,12 +121,19 @@ class Response implements \Vine\Component\Http\ResponseInterface
      * @param int $status      The response status code
      * @param array   $headers An array of response headers
      */
-    public function __construct($content = '', $status = 200, $headers = array())
+    public function __construct($content = '', $status = 200)
     {
         $this->setContent($content);
         $this->setStatus($status);
-        $this->headers = $headers;
         $this->setProtocolVersion('1.0');
+    }    
+
+    /**
+     * Factory method
+     */
+    public static function create($content = '', $status = 200)
+    {
+        return new static($content, $status);
     }    
 
     /**
@@ -305,10 +312,10 @@ class Response implements \Vine\Component\Http\ResponseInterface
         $name = strtolower($name);
 
         if ($replace === true) {
-            $this->headers[$name] = array($value);
+            $this->headers[$name] = $value;
         } else {
-            $headers = isset($this->headers[$name]) ? $this->headers[$name] : array();
-            $this->headers[$name] = array_merge($headers, array($value));
+            $headers = isset($this->headers[$name]) ? $this->headers[$name] : '';
+            $this->headers[$name] = array_merge($headers, $value);
         }
 
         return $this;
@@ -348,6 +355,15 @@ class Response implements \Vine\Component\Http\ResponseInterface
         return $this->headers;
     }
 
+    /**
+     * Return the response header for key
+     * @param  string $name 
+     * @return string       
+     */
+    public function getHeader($name)
+    {
+        return isset($this->headers[$name]) ? $this->headers[$name] : '';
+    }
 
     /**
      * Clear the respone headers.
@@ -385,7 +401,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
             return $this;
         }
 
-        header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusCodes[$this->statusCode]), true, $this->statusCode);
+        header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusCodes[$this->statusCode]), true, $this->statusCode);    
 
         $contentType = $this->contentType;
 
@@ -393,14 +409,13 @@ class Response implements \Vine\Component\Http\ResponseInterface
             $contentType .= '; charset=' . $this->charset;
         }
 
-        header('Content-Type: ' . $contentType);        
+        header('Content-Type: ' . $contentType); 
 
         foreach($this->headers as $name => $headers) {
             foreach($headers as $value) {
                 header($name . ': ' . $value, false, $this->statusCode);
             }
         }
-
         return $this;
     }
 
@@ -444,7 +459,6 @@ class Response implements \Vine\Component\Http\ResponseInterface
     {
         return $this->statusCode >= 300 && $this->statusCode < 400;
     }
-
 
     /**
      * Send the response body

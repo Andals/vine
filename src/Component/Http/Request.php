@@ -15,7 +15,7 @@ class Request implements RequestInterface
 {/*{{{*/
 
     /** @var string */
-    private $method;
+    private $method = 'GET';
 
     /** @var UrlScript */
     private $url;
@@ -40,7 +40,7 @@ class Request implements RequestInterface
         $this->url = $url;
         $this->post = (array) $post;
         $this->headers = array_change_key_case((array) $headers, CASE_LOWER);
-        $this->method = $method ?: 'GET';
+        $this->method = $method;
         $this->remoteAddress = $remoteAddress;
         $this->remoteHost = $remoteHost;
         $this->rawBody = $rawBody;
