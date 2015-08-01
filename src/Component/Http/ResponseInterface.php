@@ -25,13 +25,13 @@ interface ResponseInterface
     public function setHeader($key, $value);
 
     /**
-        * Set body
+        * Set content
         *
-        * @param string $body
+        * @param mixed content
         *
         * @return 
      */
-    public function setBody($body);
+    public function setContent($content);
 
     /**
         * Send response to client

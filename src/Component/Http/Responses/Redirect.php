@@ -8,14 +8,13 @@
 namespace Vine\Component\Http\Responses;
 
 use Vine\Component\Http\Request;
-use Vine\Component\Http\Request;
 use Vine\Component\Http\Responses\ResponseContainerInterface;
 
 /**
-* Redirect resposne.
+* Redirect .
 * @author Liang Chao 
 */
-class RedirectResponse implements ResponseContainerInterface
+class Redirect implements ResponseContainerInterface
 {
     
     /** @var string Location */

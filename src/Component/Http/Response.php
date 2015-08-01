@@ -6,22 +6,20 @@
 
 namespace Vine\Component\Http;
 
-use Vine\Component\Http\Responses\ResponseContainerInterface;
-
 class Response implements \Vine\Component\Http\ResponseInterface
 {/*{{{*/
 
-    /** @var \Vine\Component\Http Request instance. */
-    protected $request;
-
-    /** @var mixed Response body */
-    protected $body;
+    /** @var string Response content */
+    protected $content;
 
     /** @var string Response content type */
     protected $contentType = 'text/html';
 
     /** @var string Response charset. */
     protected $charset;
+
+    /** @var string Response protocol version */
+    protected $version;
 
     /** @var int Status Code. */
     protected $statusCode = 200;
@@ -115,50 +113,51 @@ class Response implements \Vine\Component\Http\ResponseInterface
         510 => 'Not Extended',
         511 => 'Network Authentication Required',
         530 => 'User access denied',
-    );/*}}}*/
-
-    public function __construct(\Vine\Component\Http\Request $request, $charset = 'UTF-8')
+    );
+    
+    /**
+     * Constructor
+     * @param mixed  $content  The resposne content
+     * @param int $status      The response status code
+     * @param array   $headers An array of response headers
+     */
+    public function __construct($content = '', $status = 200, $headers = array())
     {
-        $this->request = $request;
-        $this->charset = $charset;
+        $this->setContent($content);
+        $this->setStatus($status);
+        $this->headers = $headers;
+        $this->setProtocolVersion('1.0');
     }    
 
     /**
-     * Sets the response body.
-     * @param mixed $body $body|Response body
+     * Sets the response content.
+     * @param mixed $content
      * @return self 
      */
-    public function setBody($body) 
+    public function setContent($content) 
     {
-        if ($body instanceof $this) {
-            $this->body = $body->getBody();
-            $this->statusCode = $body->getStatus();
-            $this->outputFilters = array_merge($this->outputFilters, $body->getFilters());
-            $this->headers = $this->headers + $body->getHeaders();
-        } else {
-            $this->body = $body;
-        }
+        $this->content = (string) $content;
         return $this;
     }
 
 
     /**
-     * Returns the response body.
+     * Returns the response content.
      * @return mixed 
      */
-    public function getBody()
+    public function getContent()
     {
-        return $this->body;
+        return $this->content;
     }
 
 
     /**
-     * Clears the response body.
+     * Clears the response content.
      * @return self 
      */
-    public function clearBody()
+    public function clearContent()
     {
-        $this->body = null;
+        $this->content = null;
         return $this;
     }
 
@@ -235,6 +234,27 @@ class Response implements \Vine\Component\Http\ResponseInterface
     public function getStatus()
     {
         return $this->statusCode;
+    }
+
+    /**
+     * Sets the HTTP protocal version (1.0 or 1.1)
+     * @param string $version The HTTP protocal version
+     * @return self 
+     */
+    public function setProtocolVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Gets the HTTP protocol version
+     * @return string 
+     */
+    public function getProtocolVersion()
+    {
+        return $this->version;
     }
 
 
@@ -347,19 +367,25 @@ class Response implements \Vine\Component\Http\ResponseInterface
      */
     public function clear()
     {
-        $this->clearBody();
+        $this->clearContent();
         $this->clearFilters();
         $this->clearHeaders();
 
         return $this;
     }
 
-
+    /**
+     * send response headers
+     * @return null 
+     */
     public function sendHeaders()
     {
-        $protocal = 'HTTP/1.1';
+        // headers have already been send by the developer
+        if (headers_sent()) {
+            return $this;
+        }
 
-        header($protocal . ' ' . $this->statusCode . ' ' . $this->statusCodes[$this->statusCode]);
+        header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusCodes[$this->statusCode]), true, $this->statusCode);
 
         $contentType = $this->contentType;
 
@@ -369,74 +395,73 @@ class Response implements \Vine\Component\Http\ResponseInterface
 
         header('Content-Type: ' . $contentType);        
 
-        // Send other headers
-
         foreach($this->headers as $name => $headers) {
             foreach($headers as $value) {
-                header($name . ': ' . $value, false);
+                header($name . ': ' . $value, false, $this->statusCode);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Sends content for the current web response.
+     * @return self 
+     */
+    public function sendContent()
+    {
+        $this->content = (string) $this->content;
+
+        foreach ($this->outputFilters as $outputFilter) {
+            $this->content = $outputFilter($this->content);
+        }
+
+        echo $this->content;        
+
+        return $this;
+    }
+
+    /**
+     * Is response invalid?
+     * http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+     * @return boolean 
+     */
+    public function isInvalidStatusCode()
+    {
+        return $this->statusCode < 100 || $this->statusCode >= 600;
+    }
+
+    /**
+     * Is response successful?
+     * @return boolean 
+     */
+    public function isSuccessful()
+    {
+        return $this->statusCode >= 200 && $this->statusCode < 300;
+    }
+
+    public function isRedirection()
+    {
+        return $this->statusCode >= 300 && $this->statusCode < 400;
     }
 
 
     /**
-     * Redirects to another location.
-     * @param  string $location Location
-     * @return \Vine\Component\Http\Redirect           
+     * Send the response body
+     * @return self 
      */
-    public function redirect($location)
-    {
-        return new \Vine\Component\Http\Responses\RedirectResponse($location);
-    }
-
-
-    /**
-     * Redirects the user back to the previous page.
-     * @param  int $statusCode HTTP status code
-     * @return \Vine\Component\Http\Responses\Redirect              
-     */
-    public function back($statusCode = 302)
-    {
-        return $this->redirect($this->request->getReferer())->setStatus($statusCode);
-    }
-
-    /**
-     * Return json data of the resposne
-     * @param  mixed $data return data
-     * @return \Vine\Component\Http\Responses\JsonResponse     
-     */
-    public function json($data = null)
-    {
-        return new \Vine\Component\Http\Responses\JsonResponse($data);
-    }
-
-    /**
-     * Return jsonp data of the response
-     * @param  mixed $data     return data
-     * @param  string $callback callback name
-     * @return \Vine\Component\Http\Responses\JsonResponse        
-     */
-    public function jsonP($data = null, $callback = '_callback')
-    {
-        return new \Vine\Component\Http\Responses\JsonResponse($data, $callback);
-    }
-
     public function send()
     {
-        if($this->body instanceof ResponseContainerInterface) {
-            // This is a response container so we'll just pass it the
-            // request and response instances and let it handle the rest itself
+        if (ob_get_level() === 0) {
+            ob_start();
+        }
 
-            $this->body->send($this->request, $this);
-        } else {
-            $this->body = (string) $this->body;
+        $this->sendHeaders();
+        $this->sendContent();
 
-            foreach ($this->outputFilters as $outputFilter) {
-                $this->body = $outputFilter($this->body);
-            }
-            echo $this->body;
-        }        
-        return $this->body;
+        ob_end_flush();
+
+        return $this;
     }
 
 }/*}}}*/

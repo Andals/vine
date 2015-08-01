@@ -12,10 +12,10 @@ use Vine\Component\Http\Response;
 use Vine\Component\Http\Responses\ResponseContainerInterface;
 
 /**
-* Redirect resposne.
+* Json
 * @author Liang Chao 
 */
-class JsonResponse implements ResponseContainerInterface
+class Json implements ResponseContainerInterface
 {
     
 
@@ -105,7 +105,6 @@ class JsonResponse implements ResponseContainerInterface
             $response->setBody($this->data);
         }  
 
-        $response->send();
     }
 
 }
