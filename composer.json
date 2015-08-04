@@ -4,7 +4,8 @@
         "psr-4": {"Vine\\": "src/"}
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "*",
+        "psr/log": "~1.0"
     },
     "autoload-dev": {
         "psr-4": {

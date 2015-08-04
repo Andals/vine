@@ -13,39 +13,144 @@ namespace Vine\Component\Mysql;
  */
 class Driver
 {/*{{{*/
-    const CONN_LONG  = true;
-    const CONN_SHORT = false;
-
 	const DEF_CHARSET = 'UTF8';
-
 
     private $dbConf = array();
     private $logger = null;
 
     private $dsn = '';
-    private $pdo = null;
+    private $dbh = null;
 
 
-    public function __construct($dbConf, $logger = null)
+    /**
+        * New driver
+        *
+        * @param $dbConf, eg:
+            $dbConf = array(
+                'host'       => '127.0.0.1',
+                'user'       => 'root',
+                'pass'       => '123',
+                'name'       => 'test',
+                'port'       => 3306,
+                'persistent' => false,
+                'charset'    => 'UTF8',
+            );
+        *
+        * @param $logger
+        *
+        * @return 
+     */
+    public function __construct($dbConf, \Psr\Log\LoggerInterface $logger = null)
     {/*{{{*/
         $this->initDbConf($dbConf);
+
+        if (is_null($logger)) {
+            $logger = new \Psr\Log\NullLogger();
+        }
         $this->logger = $logger;
 
         $this->initDsn();
         $this->initConnect();
     }/*}}}*/
 
+    /**
+        * Select rows
+        *
+        * @param $sql
+        * @param $values
+        *
+        * @return array
+     */
+    public function query($sql, $values = array())
+    {/*{{{*/
+		$execResult = $this->doExecute($sql, $values);
+		$sth        = $execResult['sth'];
+		$ret        = $execResult['ret'];
+        if ($ret) {
+            return $sth->fetchAll( \PDO::FETCH_ASSOC );
+        }
+
+        return array();
+    }/*}}}*/
+
+    /**
+        * Insert update and so on
+        *
+        * @param $sql
+        * @param $values
+        *
+        * @return int
+     */
+    public function execute($sql, $values = array())
+    {/*{{{*/
+		$execResult = $this->doExecute($sql, $values);
+		$sth        = $execResult['sth'];
+		$ret        = $execResult['ret'];
+
+        if ($ret) {
+			return $sth->rowCount();
+        }
+
+		return false;
+    }/*}}}*/
+
+    /**
+        * Begin transaction
+        *
+        * @return bool
+     */
+    public function beginTrans()
+    {/*{{{*/
+        $this->logSql('begin');
+
+        $this->dbh->beginTransaction();
+    }/*}}}*/
+
+    /**
+        * Commit transaction
+        *
+        * @return bool
+     */
+    public function commit()
+    {/*{{{*/
+        $this->logSql('commit');
+
+        return $this->dbh->commit();
+    }/*}}}*/
+
+    /**
+        * Rollback transaction
+        *
+        * @return bool
+     */
+    public function rollback()
+    {/*{{{*/
+        $this->logSql('rollback');
+
+        return $this->dbh->rollback();
+    }/*}}}*/
+
+    /**
+        * Select last_insert_id
+        *
+        * @return int
+     */
+    public function lastInsertID()
+    {/*{{{*/
+        return $this->dbh->lastInsertId();
+    }/*}}}*/
+
 
     private function initDBConf($dbConf)
     {/*{{{*/
         $this->dbConf = array(
-            'host'    => $dbConf['host'],
-            'user'    => $dbConf['user'],
-            'pass'    => $dbConf['pass'],
-            'name'    => $dbConf['name'],
-            'port'    => $dbConf['port'],
-            'ctype'   => isset($dbConf['ctype']) ? $dbConf['ctype'] : self::CONN_SHORT,
-            'charset' => isset($dbConf['charset']) ? $dbConf['charset'] : self::DEF_CHARSET,
+            'host'       => $dbConf['host'],
+            'user'       => $dbConf['user'],
+            'pass'       => $dbConf['pass'],
+            'name'       => $dbConf['name'],
+            'port'       => $dbConf['port'],
+            'persistent' => isset($dbConf['persistent']) ? $dbConf['persistent'] : false,
+            'charset'    => isset($dbConf['charset']) ? $dbConf['charset'] : self::DEF_CHARSET,
         );
     }/*}}}*/
     private function initDsn()
@@ -58,27 +163,96 @@ class Driver
     private function initConnect()
     {/*{{{*/
         try {
-            $this->initPdo();
+            $this->initDbh();
         } catch(\PDOException $e) {
+            $logger->warning($e->getMessage());
+
             if(Error::lostConnection($e)) {
-                $this->initPdo();
+                $this->initDbh();
             } else {
                 throw $e;
             }
         }
-
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->pdo->query('SET NAMES '.$this->dbConf['charset']);
     }/*}}}*/
-    private function initPdo()
+    private function initDbh()
     {/*{{{*/
-        $this->pdo = new \PDO(
+        $this->dbh = new \PDO(
             $this->dsn,
             $this->dbConf['user'],
             $this->dbConf['pass'],
             array(
-                \PDO::ATTR_PERSISTENT => $this->dbConf['ctype'],
+                \PDO::ATTR_PERSISTENT => $this->dbConf['persistent'],
             )
         );
+
+        $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->dbh->query('SET NAMES '.$this->dbConf['charset']);
     }/*}}}*/
+
+    private function logSql($sql, $values = array())
+    {/*{{{*/
+    	if(!empty($values))
+    	{
+            $sql = str_replace('%', '{#}', $sql);
+            $sql = vsprintf(str_replace('?', '%s', $sql), $this->fmtValues($values));
+            $sql = str_replace('{#}', '%', $sql);
+    	}
+
+        $this->logger->info($sql);
+    }/*}}}*/
+    private function fmtValues($values)
+    {/*{{{*/
+        $result = array();
+        foreach($values as $k => $v)
+        {
+        	if(is_string($v))
+        	{
+        		$result[$k] = "'".$v."'";
+        		continue;
+        	}
+        	if(is_null($v))
+        	{
+        		$result[$k] = 'null';
+        	}
+        	$result[$k] = $v;
+        }
+        return $result;
+    }/*}}}*/
+
+	private function doExecute($sql, $values)
+	{/*{{{*/
+        $this->logSql($sql,$values);
+
+		$sth = $this->prepareExecute($sql, $values);
+		try {
+			$ret = $sth->execute();
+		} catch(\PDOException $e) {
+            $this->logger->warning($e->getMessage());
+
+            if (!Error::goneAway($e)) {
+                throw $e;
+            }
+
+            $this->initConnect();
+			$sth = $this->prepareExecute($sql, $values);
+			$ret = $sth->execute();
+		}
+
+		return array(
+			'sth' => $sth,
+			'ret' => $ret,
+		);
+	}/*}}}*/
+	private function prepareExecute($sql, $values)
+	{/*{{{*/
+        $i   = 0;
+        $sth = $this->dbh->prepare($sql);
+
+        if (!empty($values)) {
+	        foreach ($values as $value) {
+	            $sth->bindValue(++$i, $value);
+	        }
+        }
+		return $sth;
+	}/*}}}*/
 }/*}}}*/

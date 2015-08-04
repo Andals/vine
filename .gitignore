@@ -5,7 +5,8 @@ vendor
 .settings
 
 *.swp
-*.DS_Store
+tags
 
 tmp
 
+composer.lock
