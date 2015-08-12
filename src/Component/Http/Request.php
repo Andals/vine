@@ -53,8 +53,17 @@ class Request implements RequestInterface
      */
     public function getUrl()
     {
-        return clone $this->url;
+        return $this->url;
     }
+
+    /**
+     * Get urlPath
+     * @return string
+     */
+    public function getUrlPath()
+    {/*{{{*/
+        return $this->url->getPath();
+    }/*}}}*/
 
 
     /**************** query, post and so on *************************/

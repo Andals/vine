@@ -15,22 +15,50 @@ interface RouteInterface
 {/*{{{*/
 
     /**
-        * Set user defined params
+        * Set controllerName
         *
-        * @param $userDefined
+        * @param string $controllerName
         *
-        * @return 
+        * @return this
      */
-    public function setUserDefined($userDefined = null);
+    public function setControllerName($controllerName);
 
     /**
-        * After router find a route, go for it.
+        * Get controllerName
         *
-        * @param string $appName
-        * @param string $moduleName
-        * @param mixed $container
-        *
-        * @return \Vine\Component\Http\ResonseInterface
+        * @return string
      */
-    public function go($appName, $moduleName, $container);
+    public function getControllerName();
+
+    /**
+        * Set actionName
+        *
+        * @param string $actionName
+        *
+        * @return this
+     */
+    public function setActionName($actionName);
+
+    /**
+        * Get actionName
+        *
+        * @return string
+     */
+    public function getActionName();
+
+    /**
+        * Set action func args
+        *
+        * @param array $args
+        *
+        * @return this
+     */
+    public function setActionArgs($args = array());
+
+    /**
+        * Get action func args
+        *
+        * @return array
+     */
+    public function getActionArgs();
 }/*}}}*/

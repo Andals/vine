@@ -113,7 +113,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
         510 => 'Not Extended',
         511 => 'Network Authentication Required',
         530 => 'User access denied',
-    );
+    );/*}}}*/
     
     /**
      * Constructor

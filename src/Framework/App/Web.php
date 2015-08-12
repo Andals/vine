@@ -9,10 +9,16 @@
 namespace Vine\Framework\App;
 
 /**
-    * This is app for web which has view
+    * This is webapp
  */
 final class Web extends Base
 {/*{{{*/
+    public function __construct($appName)
+    {/*{{{*/
+        parent::__construct($appName);
+
+        $this->initComponents();
+    }/*}}}*/
 
     /**
         * {@inheritdoc}
@@ -36,15 +42,23 @@ final class Web extends Base
      */
     public function run($moduleName)
     {/*{{{*/
-        $this->initComponents();
-
         $request = $this->container->getRequest();
-        $route   = $this->container->getRouter()->forward($request);
+        $route   = $this->container->getRouter()->route($request);
 
-        $response = $route->go($this->appName, $moduleName, $this->container);
-        if ($response instanceof \Vine\Component\Http\ResponseInterface) {
-            $response->send();
+        $actionName = $route->getActionName();
+        $controller = $this->getController($this->appName, $moduleName, $route->getControllerName(), $actionName);
+        $controller->setRequest($request)->setView($this->container->getView());
+
+        $response = call_user_func_array(array($controller, $actionName), $route->getActionArgs());
+
+        if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
+            throw new \Vine\Framework\Error\Exception(
+                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
+                'resonse must instanceof \Vine\Component\Http\ResponseInterface'
+            );
         }
+
+        $response->send();
     }/*}}}*/
 
 
@@ -58,27 +72,34 @@ final class Web extends Base
     {/*{{{*/
         $this->initRequest();
         $this->initRouter();
-        $this->initResponse();
     }/*}}}*/
     private function initRequest()
     {/*{{{*/
-        if (!$this->container->have(\Vine\Component\Container\Web::KEY_REQUEST)) {
-            $request = new \Vine\Component\Http\Request();
-            $this->container->setRequest($request);
-        }
+        $factory = new \Vine\Component\Http\RequestFactory();
+
+        $this->container->setRequest($factory->make());
     }/*}}}*/
     private function initRouter()
     {/*{{{*/
-        if (!$this->container->have(\Vine\Component\Container\Web::KEY_ROUTER)) {
-            $router = new \Vine\Component\Routing\Router();
-            $this->container->setRouter($router);
-        }
+        $this->container->setRouter(new \Vine\Component\Routing\Router());
     }/*}}}*/
-    private function initResponse()
+    
+    private function getController($appName, $moduleName, $controllerName, $actionName)
     {/*{{{*/
-        if (!$this->container->have(\Vine\Component\Container\Web::KEY_RESPONSE)) {
-            $response = new \Vine\Component\Http\Response();
-            $this->container->setResponse($response);
+        $clsName = '\\'.ucfirst($appName).'\Controller\\';
+        $clsName.= ucfirst($moduleName).'\\'.ucfirst($controllerName);
+        if (!class_exists($clsName)) {
+            throw new \Exception("Controller $clsName not exists");
         }
+
+        $controller = new $clsName($moduleName, $controllerName, $actionName);
+        if (!$controller instanceof \Vine\Component\Controller\Base) {
+            throw new \Exception($clsName.' must be an instance of \Vine\Component\Controller\Base');
+        }
+        if (!method_exists($controller, $actionName)) {
+            throw new \Exception("Action $actionName not exists");
+        }
+
+        return $controller;
     }/*}}}*/
 }/*}}}*/

@@ -28,6 +28,12 @@ interface RequestInterface
      */
     public function getUrl();
 
+    /**
+     * Get urlPath
+     * @return string
+     */
+    public function getUrlPath();
+
 
     /******************* query, post and so on ****************************/
 

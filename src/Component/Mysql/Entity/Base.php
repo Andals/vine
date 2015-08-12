@@ -76,6 +76,21 @@ abstract class Base
         return $item;
     }/*}}}*/
 
+    /**
+        * Quick extract item for insert
+        *
+        * @param $item
+        *
+        * @return 
+     */
+    public static function extractItem($item)
+    {/*{{{*/
+        $entity = new static();
+        $entity->setColumnsValues($item);
+
+        return $entity->toItem();
+    }/*}}}*/
+
 
     protected function addColumn($columnName, $value, $func, $ext = null)
     {/*{{{*/

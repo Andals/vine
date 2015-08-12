@@ -13,10 +13,9 @@ namespace Vine\Component\Container;
  */
 class Web extends Obj
 {/*{{{*/
-    const KEY_REQUEST  = 'request';
-    const KEY_ROUTER   = 'router';
-    const KEY_RESPONSE = 'response';
-    const KEY_VIEW     = 'view';
+    const KEY_REQUEST = 'request';
+    const KEY_ROUTER  = 'router';
+    const KEY_VIEW    = 'view';
 
     /**
         * Set request instance
@@ -40,28 +39,6 @@ class Web extends Obj
         return $this->get(self::KEY_REQUEST);
     }/*}}}*/
 
-    /**
-        * Set response instance
-        *
-        * @param \Vine\Component\Http\ResponseInterface $response
-        *
-        * @return 
-     */
-    public function setResponse(\Vine\Component\Http\ResponseInterface $response)
-    {/*{{{*/
-        $this->add($response, self::KEY_RESPONSE);
-    }/*}}}*/
-
-    /**
-        * Get response instance
-        *
-        * @return \Vine\Component\Http\ResponseInterface
-     */
-    public function getResponse()
-    {/*{{{*/
-        return $this->get(self::KEY_RESPONSE);
-    }/*}}}*/
-    
     /**
         * Set router instance
         *

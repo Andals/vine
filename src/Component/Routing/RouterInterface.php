@@ -17,30 +17,28 @@ interface RouterInterface
     /**
         * Add rule to route table
         *
-        * @param \Vine\Component\Routing\Rule\RuleInterface $rule
-        * @param string $routeClsName
-        * @param mixed $userDefined
+        * @param Rule\RuleInterface $rule
+        * @param Route\RouteInterface $route
         *
-        * @return 
+        * @return this
      */
-    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined = null);
+    public function addRoute(Rule\RuleInterface $rule, Route\RouteInterface $route);
 
     /**
         * Set default route
         *
-        * @param string $routeClsName
-        * @param mixed $userDefined
+        * @param Route\RouteInterface $route
         *
         * @return 
      */
-    public function setDefaultRoute($routeClsName, $userDefined = null);
+    public function setDefaultRoute(Route\RouteInterface $route);
 
     /**
-        * Find route by request
+        * Route by request
         *
         * @param \Vine\Component\Http\RequestInterface $request
         *
-        * @return \Vine\Component\Routing\Route\RouteInterface
+        * @return Route\RouteInterface
      */
-    public function forward(\Vine\Component\Http\RequestInterface $request);
+    public function route(\Vine\Component\Http\RequestInterface $request);
 }/*}}}*/

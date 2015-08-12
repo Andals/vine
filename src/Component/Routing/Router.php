@@ -14,59 +14,55 @@ namespace Vine\Component\Routing;
 class Router implements RouterInterface
 {/*{{{*/
     private $routeTable   = array();
-    private $defaultRoute = array();
-
-    public function __construct()
-    {/*{{{*/
-        $this->defaultRoute = array(
-            'routeClsName'  => '\Vine\Component\Routing\Route\Mvc',
-            'userDefined'   => array(),
-        );
-    }/*}}}*/
+    private $defaultRoute = null;
 
     /**
         * {@inheritdoc}
      */
-    public function addRoute(\Vine\Component\Routing\Rule\RuleInterface $rule, $routeClsName, $userDefined = null)
+    public function addRoute(Rule\RuleInterface $rule, Route\RouteInterface $route)
     {/*{{{*/
         $this->routeTable[] = array(
-            'rule'          => $rule,
-            'routeClsName'  => $routeClsName,
-            'userDefined'   => $userDefined,
+            'rule'  => $rule,
+            'route' => $route,
         );
+
+        return $this;
     }/*}}}*/
 
     /**
         * {@inheritdoc}
      */
-    public function setDefaultRoute($routeClsName, $userDefined = null)
+    public function setDefaultRoute(Route\RouteInterface $route)
     {/*{{{*/
-        $this->defaultRoute = array(
-            'routeClsName'  => $routeClsName,
-            'userDefined'   => $userDefined,
-        );
+        $this->defaultRoute = $route;
     }/*}}}*/
 
     /**
         * {@inheritdoc}
      */
-    public function forward(\Vine\Component\Http\RequestInterface $request)
+    public function route(\Vine\Component\Http\RequestInterface $request)
     {/*{{{*/
-        foreach ($this->routeTable as $routeItem) {
-            $rule = $routeItem['rule'];
-            if ($rule->match($request)) {
-                return $this->loadRoute($routeItem['routeClsName'], $routeItem['userDefined']);
+        $actionArgs = array();
+        foreach ($this->routeTable as $item) {
+            if ($item['rule']->match($request, $actionArgs)) {
+                return $item['route']->setActionArgs($actionArgs);
             }
         }
 
-        return $this->loadRoute($this->defaultRoute['routeClsName'], $this->defaultRoute['userDefined']);
-    }/*}}}*/
+        if (!is_null($this->defaultRoute)) {
+            return $this->defaultRoute;
+        }
 
+        $route    = new Route\General();
+        $path     = trim($request->getUrlPath(), '/');
+        $pathData = ($path == '') ? array() : explode('/', $path);
 
-    private function loadRoute($routeClsName, $userDefined)
-    {/*{{{*/
-        $route = new $routeClsName();
-        $route->setUserDefined($userDefined);
+        if (isset($pathData[0])) {
+            $route->setControllerName($pathData[0]);
+        }
+        if (isset($pathData[1])) {
+            $route->setActionName($pathData[1]);
+        }
 
         return $route;
     }/*}}}*/
