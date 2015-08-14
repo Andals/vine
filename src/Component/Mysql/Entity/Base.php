@@ -79,9 +79,9 @@ abstract class Base
     /**
         * Quick extract item for insert
         *
-        * @param $item
+        * @param array $item
         *
-        * @return 
+        * @return array
      */
     public static function extractItem($item)
     {/*{{{*/

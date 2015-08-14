@@ -63,7 +63,7 @@ abstract class Base
              ->insert($this->tableName, array_keys($item))
              ->values(array_values($item));
 
-        return $this->driver->execute($this->simpleSqlBuilder->getSql(), $this->simpleSqlBuilder->getBindValues());
+        return $this->simpleExecute();
     }/*}}}*/
 
     /**
@@ -79,7 +79,7 @@ abstract class Base
              ->delete($this->tableName)
              ->where(array('id' => '='), array('id' => $id));
 
-        return $this->driver->execute($this->simpleSqlBuilder->getSql(), $this->simpleSqlBuilder->getBindValues());
+        return $this->simpleExecute();
     }/*}}}*/
 
     /**
@@ -97,7 +97,7 @@ abstract class Base
              ->set($columnNamesValues)
              ->where(array('id' => '='), array('id' => $id));
 
-        return $this->driver->execute($this->simpleSqlBuilder->getSql(), $this->simpleSqlBuilder->getBindValues());
+        return $this->simpleExecute();
     }/*}}}*/
 
     /**
@@ -114,7 +114,7 @@ abstract class Base
              ->select($this->getSimpleWhat($columnNames), $this->tableName)
              ->where(array('id' => '='), array('id' => $id));
 
-        $data = $this->driver->query($this->simpleSqlBuilder->getSql(), $this->simpleSqlBuilder->getBindValues());
+        $data = $this->simpleQuery();
 
         return empty($data) ? null : $data[0];
     }/*}}}*/
@@ -133,7 +133,7 @@ abstract class Base
              ->select($this->getSimpleWhat($columnNames), $this->tableName)
              ->where(array('id' => 'in'), array('id' => $ids));
 
-        return $this->driver->query($this->simpleSqlBuilder->getSql(), $this->simpleSqlBuilder->getBindValues());
+        return $this->simpleQuery();
     }/*}}}*/
 
     /**
@@ -185,5 +185,14 @@ abstract class Base
     protected function getSimpleWhat($columnNames)
     {/*{{{*/
         return empty($columnNames) ? '*' : implode(',', $columnNames);
+    }/*}}}*/
+
+    protected function simpleExecute()
+    {/*{{{*/
+        return $this->driver->execute($this->simpleSqlBuilder->getSql(), $this->simpleSqlBuilder->getBindValues());
+    }/*}}}*/
+    protected function simpleQuery()
+    {/*{{{*/
+        return $this->driver->query($this->simpleSqlBuilder->getSql(), $this->simpleSqlBuilder->getBindValues());
     }/*}}}*/
 }/*}}}*/
