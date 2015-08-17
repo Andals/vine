@@ -118,7 +118,7 @@ class Request implements RequestInterface
         $value = $default;
         if (isset($_GET[$key])) {
             $value = $_GET[$key];
-        } else if (isset($_POST[$key])) {
+        } elseif (isset($_POST[$key])) {
             $value = $_POST[$key];
         } 
         return $value;

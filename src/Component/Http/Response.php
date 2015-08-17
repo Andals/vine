@@ -125,7 +125,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
     {
         $this->setContent($content);
         $this->setStatus($status);
-        $this->setProtocolVersion('1.0');
+        $this->setProtocolVersion('1.1');
     }    
 
     /**

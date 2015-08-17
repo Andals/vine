@@ -10,16 +10,16 @@ namespace Vine\Component\Http\Validator;
 /**
  * User define validate checker
  */
-class ValidatorChecker
+class Checker
 {/*{{{*/
     public static function strNotNull($value)
     {
-        return ('' !== $value) ? true : false;
+        return ($value !== '') ? true : false;
     }
 
     public static function numNotZero($value)
     {
-        return (0 !== $value) ? true : false;
+        return ($value !== 0) ? true : false;
     }
 
     public static function arrNotEmpty($value)

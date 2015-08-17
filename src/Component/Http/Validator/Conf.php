@@ -26,7 +26,7 @@ namespace Vine\Component\Http\Validator;
 *     }
 * }
 */
-class ValidatorConf
+class Conf
 {
     const KEY_TYPE            = 'type';
     const KEY_DEFAULT         = 'default';
@@ -44,7 +44,8 @@ class ValidatorConf
 
     private $request;
 
-    public function __construct(\Vine\Component\Http\RequestInterface $request) {
+    public function __construct(\Vine\Component\Http\RequestInterface $request) 
+    {
         $this->request = $request;
     }
 
@@ -125,7 +126,7 @@ class ValidatorConf
      * @param boolean $filter is filter null
      * @return self 
      */
-    public function setParamFilterNull($name, $filter = TRUE)
+    public function setParamFilterNull($name, $filter = true)
     {
         $this->paramsConf[$name][self::KEY_FILTER_EMPTY] = $filter;
         return $this;
@@ -232,7 +233,7 @@ class ValidatorConf
      * @param  mixed $default  default value
      * @return mixed          
      */
-    private function getParam($key = null, $default = null)
+    private function getParam($key, $default = null)
     {
         return $this->request->getParam($key, $default);
     }
@@ -243,7 +244,7 @@ class ValidatorConf
      * @param  mixed $default default value
      * @return mixed          
      */
-    private function getStrParam($key = null, $default = null)
+    private function getStrParam($key, $default = '')
     {
         $value = $this->getParam($key, $default);
         return is_null($value) ? null : trim($value);
@@ -255,10 +256,10 @@ class ValidatorConf
      * @param  mixed $default default value
      * @return mixed           
      */
-    private function getNumParam($key = null, $default = 0)
+    private function getNumParam($key, $default = 0)
     {
         $value = $this->getParam($key, $default);
-        return is_null($value) ? NULL : intval($value);
+        return is_null($value) ? null : intval($value);
     }
 
     /**
@@ -267,7 +268,7 @@ class ValidatorConf
      * @param  mixed  $default default value
      * @return mixed          
      */
-    private function getArrParam($key = null, $default = array())
+    private function getArrParam($key, $default = array())
     {
         $value = $this->getParam($key, $default);
         return is_null($value) ? null : $this->fmtArrValue($value);
@@ -283,8 +284,6 @@ class ValidatorConf
         foreach ($value as $k => $v) {
             if (is_array($v)) {
                 $v = $this->fmtArrValue($v);
-            } else if (is_numeric($v)) {
-                $v = intval($v);
             } else {
                 $v = trim($v);
             }
@@ -294,16 +293,16 @@ class ValidatorConf
         return $value;
     }
 
-    private function _parseParamValue($name)
+    private function parseParamValue($name)
     {
         $default = $this->getParamDefaultValue($name);
 
         switch ($this->getParamType($name)) {
-            case \Vine\Component\Http\Validator::TYPE_STR:
+            case \Vine\Component\Http\Validator\Validator::TYPE_STR:
                 return $this->getStrParam($name, $default);
-            case \Vine\Component\Http\Validator::TYPE_NUM:
+            case \Vine\Component\Http\Validator\Validator::TYPE_NUM:
                 return $this->getNumParam($name, $default);
-            case \Vine\Component\Http\Validator::TYPE_ARR:
+            case \Vine\Component\Http\Validator\Validator::TYPE_ARR:
                 return $this->getArrParam($name, $default);
             default:
                 return $this->getParam($name, $default);
@@ -313,7 +312,7 @@ class ValidatorConf
     public function parseRequestParams()
     {
         foreach ($this->getParamNames() as $name) {
-            $value = $this->_parseParamValue($name);
+            $value = $this->parseParamValue($name);
             if (is_null($value) && $this->getParamFilterNull($name)) {
                 continue;
             }
@@ -321,7 +320,7 @@ class ValidatorConf
             $check = $this->getParamCheckFunc($name);
             if (is_callable($check)) {
                 if (!call_user_func($check, $value)) {
-                    $this->_handingParamError($name);
+                    $this->handingParamError($name);
                 }
             }
 
@@ -338,7 +337,7 @@ class ValidatorConf
         return $this->requestParams;
     }
 
-    private function _handingParamError($name)
+    private function handingParamError($name)
     {
         switch ($this->getParamErrorHanding($name)) {
             case \Vine\Component\Http\Validator::ERROR_HANDING_EXCEPTION:

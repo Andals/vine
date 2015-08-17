@@ -5,10 +5,10 @@
  * Copyright (c) 2015 Liang Chao
  */
 
-namespace Vine\Component\Http;
+namespace Vine\Component\Http\Validator;
 
-use Vine\Component\Http\Validator\ValidatorConf;
-use Vine\Component\Http\Validator\ValidatorChecker;
+use Vine\Component\Http\Validator\Conf;
+use Vine\Component\Http\Validator\Checker;
 
 
 /**
@@ -32,6 +32,6 @@ class Validator
 
     public function __construct() {
         $request = new \Vine\Component\Http\RequestFactory();
-        $this->conf = new ValidatorConf($request->make());
+        $this->conf = new Conf($request->make());
     }
 }
