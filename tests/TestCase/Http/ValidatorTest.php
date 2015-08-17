@@ -17,7 +17,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testHttpValidatorSetterDetector()
     {
-        $validator = new \Vine\Component\Http\Validator\Validator;
+        $request = new \Vine\Component\Http\RequestFactory();
+        $validator = new \Vine\Component\Http\Validator\Validator($request->make());
         $name = 'app_id';
         $validator->conf->setParamType($name, \Vine\Component\Http\Validator\Validator::TYPE_NUM);
         $validator->conf->setParamDefaultValue($name, -1);
@@ -36,7 +37,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testHttpValidatorParseRequestDetector()
     {
-        $validator = new \Vine\Component\Http\Validator\Validator;
+        $request = new \Vine\Component\Http\RequestFactory();
+        $validator = new \Vine\Component\Http\Validator\Validator($request->make());
         $name = 'app_name';
         $validator->conf->setParamType($name, \Vine\Component\Http\Validator\Validator::TYPE_STR);
         $validator->conf->setParamDefaultValue($name, 'name');
@@ -49,10 +51,10 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'app_name' => 'vine',
             
         );
-        $validator->conf->parseRequestParams();
-        $this->assertEquals(array('app_name'=>'vine'), $validator->conf->getRequestParams());
-        $this->assertArrayHasKey('app_name', $validator->conf->getRequestParams());
-        $this->assertArrayNotHasKey('app_desc', $validator->conf->getRequestParams());
+        $validator->parseRequestParams();
+        $this->assertEquals(array('app_name'=>'vine'), $validator->getRequestParams());
+        $this->assertArrayHasKey('app_name', $validator->getRequestParams());
+        $this->assertArrayNotHasKey('app_desc', $validator->getRequestParams());
 
     }
 }
