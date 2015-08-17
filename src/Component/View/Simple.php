@@ -33,7 +33,7 @@ class Simple extends Base
                         $item = htmlspecialchars($item);
                     }
                 });
-            } else if (is_string($value)) {
+            } elseif (is_string($value)) {
                 $value = htmlspecialchars($value);
             }
         }
