@@ -10,13 +10,11 @@ namespace Vine\Component\Http\Validator;
 use Vine\Component\Http\Validator\Conf;
 use Vine\Component\Http\Validator\Checker;
 
-
 /**
  * Validate & Filter HTTP Params
  *
  * @author Liang Chao 
  */
-
 class Validator 
 {
     const ERROR_HANDING_EXCEPTION   = 1;
@@ -103,24 +101,6 @@ class Validator
     }    
 
     /**
-     * deal the param error handle
-     * @param  string $name param name
-     */
-    private function handingParamError($name)
-    {
-        switch ($this->conf->getParamErrorHanding($name)) {
-            case self::ERROR_HANDING_EXCEPTION:
-                $exception = $this->conf->getParamErrorExceptionClsname($name);
-                throw new $exception($this->conf->getParamErrorErrno($name), $this->conf->getParamErrorMsg($name));
-            case self::ERROR_HANDING_USE_DEFAULT:
-                $this->requestParams[$name] = $this->conf->getParamDefaultValue($name);
-                break;
-            case self::ERROR_HANDING_DISCARD:
-            default:
-        }
-    }    
-
-    /**
      * parse the params value
      * @param  string $name param name
      * @return mixed       
@@ -141,6 +121,23 @@ class Validator
         }
     }    
 
+    /**
+     * deal the param error handle
+     * @param  string $name param name
+     */
+    private function handingParamError($name)
+    {
+        switch ($this->conf->getParamErrorHanding($name)) {
+            case self::ERROR_HANDING_EXCEPTION:
+                $exception = $this->conf->getParamErrorExceptionClsname($name);
+                throw new $exception($this->conf->getParamErrorErrno($name), $this->conf->getParamErrorMsg($name));
+            case self::ERROR_HANDING_USE_DEFAULT:
+                $this->requestParams[$name] = $this->conf->getParamDefaultValue($name);
+                break;
+            case self::ERROR_HANDING_DISCARD:
+                default:
+        }
+    }        
 
     /**
      * parse the params to requestParams use conf regular

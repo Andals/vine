@@ -40,7 +40,6 @@ class Conf
 
     private $paramsConf = array();
 
-
     /**
      * Sets the param type
      * @param string $name param name
@@ -53,7 +52,6 @@ class Conf
         return $this;
     }    
 
-
     /**
      * Gets the param type
      * @param  string $name param name
@@ -63,7 +61,6 @@ class Conf
     {
         return $this->paramsConf[$name][self::KEY_TYPE];
     }
-
 
     /**
      * Sets the param default value
@@ -76,7 +73,6 @@ class Conf
         $this->paramsConf[$name][self::KEY_DEFAULT] = $value;
         return $this;
     }
-
 
     /**
      * Gets the param default value
@@ -100,7 +96,6 @@ class Conf
         return $this;
     }
 
-
     /**
      * Gets the param check func
      * @param  string $name param name
@@ -110,7 +105,6 @@ class Conf
     {
         return isset($this->paramsConf[$name][self::KEY_CHECK]) ? $this->paramsConf[$name][self::KEY_CHECK] : '';
     }
-
 
     /**
      * Sets the param is filter null ?
@@ -134,7 +128,6 @@ class Conf
         return isset($this->paramsConf[$name][self::KEY_FILTER_EMPTY]) ? $this->paramsConf[$name][self::KEY_FILTER_EMPTY] : false;
     }
 
-
     /**
      * Sets the param error handing type
      * @param string $name    param name
@@ -147,7 +140,6 @@ class Conf
         return $this;
     }
 
-
     /**
      * Gets the param error handing type
      * @param  string $name param name
@@ -157,7 +149,6 @@ class Conf
     {
         return $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_HANDING];
     }
-
 
     /**
      * Sets the param error exception info
@@ -175,7 +166,6 @@ class Conf
         return $this;
     }
 
-
     /**
      * Gets the param exception className
      * @param  string $name param name
@@ -186,7 +176,6 @@ class Conf
         return $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_EXCEPTION];
     }
 
-
     /**
      * Gets the param error no
      * @param  string $name param name
@@ -196,7 +185,6 @@ class Conf
     {
         return $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_ERRNO];
     }
-
 
     /**
      * Gets the param error msg
