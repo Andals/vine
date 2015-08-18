@@ -6,6 +6,15 @@
             "Vine\\Test\\": "tests"
         }
     },
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
+            "type": "composer",
+            "url": "http://packagist.phpcomposer.com"
+        }
+    ],
     "require": {
         "psr/log": "~1.0"
     }
