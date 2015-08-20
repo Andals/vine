@@ -11,7 +11,6 @@ namespace Vine\Component\Controller;
 
 abstract class Base
 {/*{{{*/
-
     /**  
      * @var string current module name.
      */
@@ -36,6 +35,11 @@ abstract class Base
      * @var \Vine\Component\Http\RequestInterface request object.
      */
     protected $request;
+
+    /**  
+     * @array action params which parsed by validator.
+     */
+    protected $actionParams = array();
 
     /**  
      * Constructor.
@@ -68,13 +72,37 @@ abstract class Base
      * NOTE:Request object is needed in action methods.
      * We should guarantee this method is called before that.
      * @param \Vine\Component\Http\RequestInterface $request request object.
+     * @param bool $useValidator parse actionParams use validator
      * @return this
      */
-    public function setRequest(\Vine\Component\Http\RequestInterface $request)
+    public function setRequest(\Vine\Component\Http\RequestInterface $request, $useValidator = true)
     {/*{{{*/
         $this->request = $request;
 
+        if ($useValidator) {
+            $methodName = 'set'.ucfirst($this->actionName).'ActionParamsConf';
+            if (method_exists($this, $methodName)) {
+                $validator = new \Vine\Component\Http\Validator\Validator($this->request);
+                $this->$methodName($validator->getConf());
+                $this->actionParams = $validator->parseRequestParams();
+            }
+        }
+
         return $this;
+    }/*}}}*/
+
+    /**
+     * Run before action
+     */
+    public function beforeAction()
+    {/*{{{*/
+    }/*}}}*/
+
+    /**
+     * Run after action
+     */
+    public function afterAction()
+    {/*{{{*/
     }/*}}}*/
 
 

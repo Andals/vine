@@ -130,16 +130,6 @@ class Driver
         return $this->dbh->rollback();
     }/*}}}*/
 
-    /**
-        * Select last_insert_id
-        *
-        * @return int
-     */
-    public function lastInsertID()
-    {/*{{{*/
-        return $this->dbh->lastInsertId();
-    }/*}}}*/
-
 
     private function initDBConf($dbConf)
     {/*{{{*/
@@ -186,7 +176,7 @@ class Driver
         );
 
         $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->dbh->query('SET NAMES '.$this->dbConf['charset']);
+        $this->dbh->query('set names '.$this->dbConf['charset']);
     }/*}}}*/
 
     private function logSql($sql, $values = array())

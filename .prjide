@@ -4,13 +4,9 @@ vine=$PWD in=tool/in.vim {
  phpunit.xml.dist
  src=src {
   Component=Component {
-   Bootstrap=Bootstrap {
-    Base.php
-    Web.php
-   }
    Container=Container {
     ContainerInterface.php
-    Obj.php
+    General.php
     Web.php
    }
    Controller=Controller {
@@ -28,10 +24,10 @@ vine=$PWD in=tool/in.vim {
     ResponseInterface.php
     Url.php
     UrlScript.php
-    Validator.php
     Validator=Validator {
-     ValidatorChecker.php
-     ValidatorConf.php
+     Checker.php
+     Conf.php
+     Validator.php
     }
    }
    Log=Log {
@@ -56,6 +52,7 @@ vine=$PWD in=tool/in.vim {
     }
     Entity=Entity {
      Base.php
+     Processor.php
     }
    }
    Routing=Routing {
@@ -71,6 +68,9 @@ vine=$PWD in=tool/in.vim {
      RuleInterface.php
     }
    }
+   Tool=Tool {
+    Toolbox.php
+   }
    View=View {
     Base.php
     Simple.php
@@ -80,6 +80,9 @@ vine=$PWD in=tool/in.vim {
   Framework=Framework {
    App=App {
     Base.php
+    Web.php
+   }
+   Bootstrap=Bootstrap {
     Web.php
    }
    Error=Error {

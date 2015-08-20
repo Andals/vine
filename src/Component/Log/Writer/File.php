@@ -29,10 +29,10 @@ class File implements WriterInterface
         $suffix = $this->getFileSuffix($split);
 
         $this->fileConf = array(
-            'split'    => $split,
-            'suffix'   => $suffix,
-            'path'     => $filePath,
-            'realPath' => $this->getRealPath($filePath, $suffix),
+            'split'     => $split,
+            'suffix'    => $suffix,
+            'path'      => $filePath,
+            'real_path' => $this->getRealPath($filePath, $suffix),
         );
     }/*}}}*/
 
@@ -46,10 +46,10 @@ class File implements WriterInterface
 
         if ($suffix != $this->fileConf['suffix']) {
             $realPath = $this->getRealPath($this->fileConf['path'], $suffix);
-            $this->fileConf['suffix']   = $suffix;
-            $this->fileConf['realPath'] = $realPath;
+            $this->fileConf['suffix']    = $suffix;
+            $this->fileConf['real_path'] = $realPath;
         } else {
-            $realPath = $this->fileConf['realPath'];
+            $realPath = $this->fileConf['real_path'];
         }
 
         error_log($message, self::MESSAGE_TYPE_APPEND, $realPath);

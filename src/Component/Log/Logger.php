@@ -68,7 +68,7 @@ class Logger extends \Psr\Log\AbstractLogger
     );/*}}}*/
 
 
-    public function __construct(Formater\FormaterInterface $formater, Writer\WriterInterface $writer, $globalLevel)
+    public function __construct(Formater\FormaterInterface $formater, Writer\WriterInterface $writer, $globalLevel = LogLevel::INFO)
     {/*{{{*/
         $this->setLevelConf($formater, $writer, $globalLevel);
     }/*}}}*/

@@ -21,7 +21,7 @@ abstract class Base
         *
         * @param mixed $bootstrap
         *
-        * @return \Vine\Framework\App\Base
+        * @return self
      */
     abstract public function bootstrap($bootstrap);
 

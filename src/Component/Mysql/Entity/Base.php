@@ -19,13 +19,13 @@ abstract class Base
         *    $columns = array(
         *        'id'(columnName) => array(
         *            'value' => 0,
-        *            'func'  => array($this, processSimpleInt),
+        *            'func'  => array('\Vine\Component\Mysql\Entity\Processor', 'processSimpleInt'),
         *            'ext'   => array(),
         *        ),
         *        'name'(columnName) => array(
         *            'value' => '',
-        *            'func'  => array($this, processSimpleString),
-        *            'ext'   => array('maxLen' => 20),
+        *            'func'  => array('\Vine\Component\Mysql\Entity\Processor', 'processSimpleString'),
+        *            'ext'   => array('max_len' => 20),
         *        ),
         *    );
      */
@@ -103,28 +103,5 @@ abstract class Base
             'func'  => $func,
             'ext'   => $ext,
         );
-    }/*}}}*/
-
-    protected function processSimpleInt($value, $ext = null)
-    {/*{{{*/
-        if (!is_numeric($value)) {
-            throw new \Exception("$value is not int");
-        }
-
-        return intval($value);
-    }/*}}}*/
-    protected function processSimpleString($value, $ext = null)
-    {/*{{{*/
-        if (!is_string($value)) {
-            throw new \Exception("$value is not string");
-        }
-
-        if (isset($ext['maxLen'])) {
-            if (strlen($value) > $ext['maxLen']) {
-                throw new \Exception("$value exceed maxLen");
-            }
-        }
-
-        return trim($value);
     }/*}}}*/
 }/*}}}*/

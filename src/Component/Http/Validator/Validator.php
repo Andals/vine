@@ -25,7 +25,7 @@ class Validator
     const TYPE_NUM = 2;
     const TYPE_ARR = 3;           
 
-    public $conf;
+    private $conf;
     private $request;
     private $requestParams = array();
 
@@ -33,6 +33,15 @@ class Validator
     {
         $this->request = $request;
         $this->conf = new Conf();
+    }
+
+    /**
+     * Gets the validator conf
+     * @return \Vine\Component\Http\Validator\Conf
+     */
+    public function getConf()
+    {
+        return $this->conf;
     }
 
     /**
@@ -158,6 +167,8 @@ class Validator
             }
             $this->requestParams[$name] = $value;
         }
+
+        return $this->requestParams;
     }    
 
     /**

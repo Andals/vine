@@ -15,21 +15,21 @@ interface ContainerInterface
 {/*{{{*/
 
     /**
-        * store mix
+        * store mixed
         *
-        * @param mix $mix
         * @param string $key
+        * @param mixed $value
         *
-        * @return bool
+        * @return self
      */
-    public function add($mix, $key = '');
+    public function add($key, $value);
 
     /**
-        * Get mix
+        * Get mixed
         *
         * @param string $key
         *
-        * @return mix
+        * @return mixed
      */
     public function get($key);
 

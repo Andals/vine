@@ -11,7 +11,7 @@ namespace Vine\Component\Container;
 /**
     * Web container
  */
-class Web extends Obj
+class Web extends General
 {/*{{{*/
     const KEY_REQUEST = 'request';
     const KEY_ROUTER  = 'router';
@@ -22,11 +22,11 @@ class Web extends Obj
         *
         * @param \Vine\Component\Http\RequestInterface $request
         *
-        * @return 
+        * @return self
      */
     public function setRequest(\Vine\Component\Http\RequestInterface $request)
     {/*{{{*/
-        $this->add($request, self::KEY_REQUEST);
+        return $this->add(self::KEY_REQUEST, $request);
     }/*}}}*/
 
     /**
@@ -44,11 +44,11 @@ class Web extends Obj
         *
         * @param \Vine\Component\Routing\RouterInterface $router
         *
-        * @return 
+        * @return self
      */
     public function setRouter(\Vine\Component\Routing\RouterInterface $router)
     {/*{{{*/
-        $this->add($router, self::KEY_ROUTER);
+        return $this->add(self::KEY_ROUTER, $router);
     }/*}}}*/
 
     /**
@@ -66,11 +66,11 @@ class Web extends Obj
         *
         * @param \Vine\Component\View\ViewInterface $request
         *
-        * @return
+        * @return self
      */
     public function setView(\Vine\Component\View\ViewInterface $view)
     {/*{{{*/
-        $this->add($view, self::KEY_VIEW);
+        return $this->add(self::KEY_VIEW, $view);
     }/*}}}*/
     
     /**

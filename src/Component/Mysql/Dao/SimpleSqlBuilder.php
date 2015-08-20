@@ -161,6 +161,10 @@ class SimpleSqlBuilder
      */
     public function where($columnComparisons, $columnNamesValues, $logic = 'and')
     {/*{{{*/
+        if (empty($columnNamesValues)) {
+            return $this;
+        }
+
         $this->sql.= ' where ';
 
         $sqls = array();
@@ -177,17 +181,16 @@ class SimpleSqlBuilder
     }/*}}}*/
 
     /**
-        * Order by id(columnName) asc(order)
+        * Order by
         *
-        * @param string $columnName
-        * @param string $order
+        * @param string $orderBy order by statement
         *
         * @return SimpleSqlBuilder
      */
-    public function orderBy($columnName, $order)
+    public function orderBy($orderBy)
     {/*{{{*/
-        if ($columnName != '') {
-            $this->sql.= ' order by '.$columnName.' '.$order;
+        if ('' != $orderBy) {
+            $this->sql.= ' order by '.$orderBy;
         }
 
         return $this;

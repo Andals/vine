@@ -25,7 +25,7 @@ final class Web extends Base
      */
     public function bootStrap($bootstrap)
     {/*{{{*/
-        if (!$bootstrap instanceof \Vine\Component\Bootstrap\Web) {
+        if (!$bootstrap instanceof \Vine\Framework\Bootstrap\Web) {
             throw new \Vine\Framework\Error\Exception(
                 \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
                 get_class($bootstrap).' must instanceof \Vine\Component\Bootstrap\Web'
@@ -49,7 +49,9 @@ final class Web extends Base
         $controller = $this->getController($this->appName, $moduleName, $route->getControllerName(), $actionName);
         $controller->setRequest($request)->setView($this->container->getView());
 
+        $controller->beforeAction();
         $response = call_user_func_array(array($controller, $actionName), $route->getActionArgs());
+        $controller->afterAction();
 
         if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
             throw new \Vine\Framework\Error\Exception(
@@ -70,18 +72,12 @@ final class Web extends Base
 
     private function initComponents()
     {/*{{{*/
-        $this->initRequest();
-        $this->initRouter();
-    }/*}}}*/
-    private function initRequest()
-    {/*{{{*/
         $factory = new \Vine\Component\Http\RequestFactory();
+        $request = $factory->make();
+        $router  = new \Vine\Component\Routing\Router();
 
-        $this->container->setRequest($factory->make());
-    }/*}}}*/
-    private function initRouter()
-    {/*{{{*/
-        $this->container->setRouter(new \Vine\Component\Routing\Router());
+        $this->container->setRequest($request)
+                        ->setRouter($router);
     }/*}}}*/
     
     private function getController($appName, $moduleName, $controllerName, $actionName)

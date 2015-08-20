@@ -127,13 +127,33 @@ abstract class Base
         *
         * @return array
      */
-    public function selectByIds($ids, $columnNames = array())
+    public function selectByIds($ids, $columnNames = array(), $orderBy = '', $bgn = 0, $cnt = 0)
     {/*{{{*/
         $this->simpleSqlBuilder
              ->select($this->getSimpleWhat($columnNames), $this->tableName)
-             ->where(array('id' => 'in'), array('id' => $ids));
+             ->where(array('id' => 'in'), array('id' => $ids))
+             ->orderBy($orderBy)
+             ->limit($bgn, $cnt);
 
         return $this->simpleQuery();
+    }/*}}}*/
+
+    /**
+        * Select total by ids
+        *
+        * @param $ids
+        *
+        * @return 
+     */
+    public function selectTotalByIds($ids)
+    {/*{{{*/
+        $this->simpleSqlBuilder
+             ->select('count(*) as cnt', $this->tableName)
+             ->where(array('id' => 'in'), array('id' => $ids));
+
+        $data = $this->simpleQuery();
+
+        return empty($data) ? 0 : intval($data[0]['cnt']);
     }/*}}}*/
 
     /**
@@ -169,16 +189,6 @@ abstract class Base
     public function rollback()
     {/*{{{*/
         return $this->driver->rollback();
-    }/*}}}*/
-
-    /**
-        * Select last_insert_id
-        *
-        * @return int
-     */
-    public function lastInsertID()
-    {/*{{{*/
-        return $this->driver->lastInsertId();
     }/*}}}*/
 
 
