@@ -5,7 +5,7 @@
  * Copyright (c) 2015 Liang Chao
  */
 
-namespace Vine\Component\Http\Validator;
+namespace Vine\Component\Validator;
 
 /**
  * User define validate checker

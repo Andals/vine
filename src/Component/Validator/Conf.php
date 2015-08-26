@@ -5,26 +5,11 @@
  * Copyright (c) 2015 Liang Chao
  */
 
-namespace Vine\Component\Http\Validator;
+namespace Vine\Component\Validator;
 
 /**
 * Validator Conf
 * @author Liang Chao
-* @data_struct
-* var conf = {
-*     'key': {
-*         'type': 'num',
-*         'default': 0,
-*         'check': function () {},
-*         'filter_empty': true,
-*         'error': {
-*             'handing': '1',
-*             'exception':  ExceptionClass,
-*             'errorno': '1234',
-*             'msg': '错误信息'
-*         }
-*     }
-* }
 */
 class Conf
 {
@@ -129,28 +114,6 @@ class Conf
     }
 
     /**
-     * Sets the param error handing type
-     * @param string $name    param name
-     * @param string $handing type
-     * @return self 
-     */
-    public function setParamErrorHanding($name, $handing)
-    {
-        $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_HANDING] = $handing;
-        return $this;
-    }
-
-    /**
-     * Gets the param error handing type
-     * @param  string $name param name
-     * @return string       
-     */
-    public function getParamErrorHanding($name)
-    {
-        return $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_HANDING];
-    }
-
-    /**
      * Sets the param error exception info
      * @param string $name               param name
      * @param Exception $exceptionClassName exception class
@@ -158,22 +121,11 @@ class Conf
      * @param string $msg                
      * @return self 
      */
-    public function setParamErrorException($name, $exceptionClassName, $errno, $msg = '')
+    public function setParamExceptionParams($name, $msg = '', $errno)
     {
-        $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_EXCEPTION] = $exceptionClassName;
         $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_ERRNO] = $errno;
         $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_MSG] = $msg;
         return $this;
-    }
-
-    /**
-     * Gets the param exception className
-     * @param  string $name param name
-     * @return string       
-     */
-    public function getParamErrorExceptionClsname($name)
-    {
-        return $this->paramsConf[$name][self::KEY_ERROR][self::KEY_ERROR_EXCEPTION];
     }
 
     /**

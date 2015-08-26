@@ -5,10 +5,11 @@
  * Copyright (c) 2015 Liang Chao
  */
 
-namespace Vine\Component\Http\Validator;
+namespace Vine\Component\Validator;
 
-use Vine\Component\Http\Validator\Conf;
-use Vine\Component\Http\Validator\Checker;
+use Vine\Component\Validator\Conf;
+use Vine\Component\Validator\Checker;
+use Vine\Component\Validator\ParamException;
 
 /**
  * Validate & Filter HTTP Params
@@ -17,15 +18,11 @@ use Vine\Component\Http\Validator\Checker;
  */
 class Validator 
 {
-    const ERROR_HANDING_EXCEPTION   = 1;
-    const ERROR_HANDING_USE_DEFAULT = 2;
-    const ERROR_HANDING_DISCARD     = 3;
-
     const TYPE_STR = 1;
     const TYPE_NUM = 2;
     const TYPE_ARR = 3;           
 
-    private $conf;
+    public $conf;
     private $request;
     private $requestParams = array();
 
@@ -134,18 +131,11 @@ class Validator
      * deal the param error handle
      * @param  string $name param name
      */
-    private function handingParamError($name)
+    private function handingParamException($name)
     {
-        switch ($this->conf->getParamErrorHanding($name)) {
-            case self::ERROR_HANDING_EXCEPTION:
-                $exception = $this->conf->getParamErrorExceptionClsname($name);
-                throw new $exception($this->conf->getParamErrorErrno($name), $this->conf->getParamErrorMsg($name));
-            case self::ERROR_HANDING_USE_DEFAULT:
-                $this->requestParams[$name] = $this->conf->getParamDefaultValue($name);
-                break;
-            case self::ERROR_HANDING_DISCARD:
-                default:
-        }
+        $message = $this->conf->getParamErrorMsg($name);
+        $errorno = $this->conf->getParamErrorErrno($name);
+        throw new ParamException($message, $errorno);
     }        
 
     /**
@@ -162,7 +152,7 @@ class Validator
             $check = $this->conf->getParamCheckFunc($name);
             if (is_callable($check)) {
                 if (!call_user_func($check, $value)) {
-                    $this->handingParamError($name);
+                    $this->handingParamException($name);
                 }
             }
             $this->requestParams[$name] = $value;

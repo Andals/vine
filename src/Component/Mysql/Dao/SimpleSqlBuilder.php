@@ -161,12 +161,6 @@ class SimpleSqlBuilder
      */
     public function where($columnComparisons, $columnNamesValues, $logic = 'and')
     {/*{{{*/
-        if (empty($columnNamesValues)) {
-            return $this;
-        }
-
-        $this->sql.= ' where ';
-
         $sqls = array();
         foreach ($columnComparisons as $name => $comparison) {
             if (isset($columnNamesValues[$name])) {
@@ -174,8 +168,10 @@ class SimpleSqlBuilder
             }
         }
 
-        $spr = ' '.$logic.' ';
-        $this->sql.= implode($spr, $sqls);
+        if (!empty($sqls)) {
+            $spr = ' '.$logic.' ';
+            $this->sql.= ' where '.implode($spr, $sqls);
+        }
 
         return $this;
     }/*}}}*/

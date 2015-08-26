@@ -23,7 +23,7 @@ final class Web extends Base
     /**
         * {@inheritdoc}
      */
-    public function bootStrap($bootstrap)
+    public function bootstrap($bootstrap)
     {/*{{{*/
         if (!$bootstrap instanceof \Vine\Framework\Bootstrap\Web) {
             throw new \Vine\Framework\Error\Exception(
@@ -41,6 +41,23 @@ final class Web extends Base
         * {@inheritdoc}
      */
     public function run($moduleName)
+    {/*{{{*/
+        try {
+            $response = $this->handleRequest($moduleName);
+        } catch (\Exception $e) {
+            $response = $this->handleError($moduleName, $e);
+        }
+
+        $response->send();
+    }/*}}}*/
+
+
+    protected function getContainer()
+    {/*{{{*/
+        return new \Vine\Component\Container\Web();
+    }/*}}}*/
+
+    private function handleRequest($moduleName)
     {/*{{{*/
         $request = $this->container->getRequest();
         $route   = $this->container->getRouter()->route($request);
@@ -60,15 +77,30 @@ final class Web extends Base
             );
         }
 
-        $response->send();
+        return $response;
     }/*}}}*/
-
-
-    protected function getContainer()
+    private function handleError($moduleName, $e)
     {/*{{{*/
-        return new \Vine\Component\Container\Web();
-    }/*}}}*/
+        $request = $this->container->getRequest();
 
+        $controllerName = $this->container->getErrorControllerName();
+        $actionName     = $this->container->getErrorActionName();
+        $controller     = $this->getController($this->appName, $moduleName, $controllerName, $actionName);
+        $controller->setRequest($request, false)->setView($this->container->getView());
+
+        $controller->beforeAction();
+        $response = $controller->$actionName($e);
+        $controller->afterAction();
+
+        if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
+            throw new \Vine\Framework\Error\Exception(
+                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
+                'resonse must instanceof \Vine\Component\Http\ResponseInterface'
+            );
+        }
+
+        return $response;
+    }/*}}}*/
 
     private function initComponents()
     {/*{{{*/
@@ -77,7 +109,9 @@ final class Web extends Base
         $router  = new \Vine\Component\Routing\Router();
 
         $this->container->setRequest($request)
-                        ->setRouter($router);
+                        ->setRouter($router)
+                        ->setErrorControllerName('error')
+                        ->setErrorActionName('index');
     }/*}}}*/
     
     private function getController($appName, $moduleName, $controllerName, $actionName)

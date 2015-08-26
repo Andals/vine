@@ -43,7 +43,8 @@ class JsonResponse extends Response
      * Sets the JSONP callback
      * @param string|null $callback The JSONP callback or null to use none
      */
-    public function setCallback($callback = null) {
+    public function setCallback($callback = null)
+    {
         if ($callback !== null) {
             // taken from http://www.geekality.net/2011/08/03/valid-javascript-identifier/
             $pattern = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*+$/u';

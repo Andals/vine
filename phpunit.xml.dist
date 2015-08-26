@@ -16,8 +16,8 @@
         <testsuite name="Vine Test Suite">
             <directory>./tests/TestCase/</directory>
             <!-- Excludes are required in order to let DatabaseSuite decorate the tests -->
-            <exclude>./tests/TestCase/Database/</exclude>
-            <exclude>./tests/TestCase/ORM/</exclude>
+            <exclude>./tests/TestCase/Log</exclude>
+            <exclude>./tests/TestCase/Mysql/</exclude>
         </testsuite>
     </testsuites>
 
