@@ -22,13 +22,12 @@ class Validator
     const TYPE_NUM = 2;
     const TYPE_ARR = 3;           
 
-    public $conf;
-    private $request;
-    private $requestParams = array();
+    private $conf;
+    private $filterConf;
+    private $filteredParams = array();
 
-    public function __construct(\Vine\Component\Http\RequestInterface $request)
+    public function __construct()
     {
-        $this->request = $request;
         $this->conf = new Conf();
     }
 
@@ -49,8 +48,17 @@ class Validator
      */
     private function getParam($key, $default = null)
     {
-        return $this->request->getParam($key, $default);
+        return isset($this->filterConf[$key]) ? $this->filterConf[$key] : $default;
     }    
+
+    /**
+     * Sets the filter conf
+     * @param mixed $conf 
+     */
+    public function setFilterParams($conf) 
+    {
+        $this->filterConf = $conf;
+    }
 
     /**
      * Gets the string format request params
@@ -139,10 +147,11 @@ class Validator
     }        
 
     /**
-     * parse the params to requestParams use conf regular
+     * parse the params to filteredParams use conf regular
      */
-    public function parseRequestParams()
+    public function filterParams($originParams)
     {
+        $this->setFilterParams($originParams);
         foreach ($this->conf->getParamNames() as $name) {
             $value = $this->parseParamValue($name);
             if (is_null($value) && $this->conf->getParamFilterNull($name)) {
@@ -155,18 +164,18 @@ class Validator
                     $this->handingParamException($name);
                 }
             }
-            $this->requestParams[$name] = $value;
+            $this->filteredParams[$name] = $value;
         }
 
-        return $this->requestParams;
+        return $this->filteredParams;
     }    
 
     /**
      * Gets the request params
      * @return array 
      */
-    public function getRequestParams()
+    public function getFilteredParams()
     {
-        return $this->requestParams;
+        return $this->filteredParams;
     }        
 }
