@@ -40,16 +40,16 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $originParams = $request->getParam();
         $validator->filterParams($originParams);
-        $this->assertEquals(array('app_name'=>'vine'), $validator->getFilteredParams());
-        $this->assertArrayHasKey('app_name', $validator->getFilteredParams());
-        $this->assertArrayNotHasKey('app_desc', $validator->getFilteredParams());
+        $this->assertEquals(array('app_name'=>'vine'), $validator->getFilterParams());
+        $this->assertArrayHasKey('app_name', $validator->getFilterParams());
+        $this->assertArrayNotHasKey('app_desc', $validator->getFilterParams());
 
         $originParams = array(
             'appdesc' => 'framework',
             'app_name' => 'vine-framework',            
         );
         $validator->filterParams($originParams);
-        $this->assertEquals(array('app_name'=>'vine-framework'), $validator->getFilteredParams());        
+        $this->assertEquals(array('app_name'=>'vine-framework'), $validator->getFilterParams());        
 
     }
 }

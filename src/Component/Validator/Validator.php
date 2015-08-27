@@ -23,8 +23,8 @@ class Validator
     const TYPE_ARR = 3;           
 
     private $conf;
-    private $filterConf;
-    private $filteredParams = array();
+    private $originParams = array();
+    private $filterParams = array();
 
     public function __construct()
     {
@@ -48,16 +48,16 @@ class Validator
      */
     private function getParam($key, $default = null)
     {
-        return isset($this->filterConf[$key]) ? $this->filterConf[$key] : $default;
+        return isset($this->originParams[$key]) ? $this->originParams[$key] : $default;
     }    
 
     /**
      * Sets the filter conf
      * @param mixed $conf 
      */
-    public function setFilterParams($conf) 
+    public function setOriginParams($conf) 
     {
-        $this->filterConf = $conf;
+        $this->originParams = $conf;
     }
 
     /**
@@ -151,7 +151,7 @@ class Validator
      */
     public function filterParams($originParams)
     {
-        $this->setFilterParams($originParams);
+        $this->setOriginParams($originParams);
         foreach ($this->conf->getParamNames() as $name) {
             $value = $this->parseParamValue($name);
             if (is_null($value) && $this->conf->getParamFilterNull($name)) {
@@ -167,18 +167,18 @@ class Validator
                     $this->handingParamException($name);
                 }
             }
-            $this->filteredParams[$name] = $value;
+            $this->filterParams[$name] = $value;
         }
 
-        return $this->filteredParams;
+        return $this->filterParams;
     }    
 
     /**
      * Gets the request params
      * @return array 
      */
-    public function getFilteredParams()
+    public function getFilterParams()
     {
-        return $this->filteredParams;
+        return $this->filterParams;
     }        
 }
