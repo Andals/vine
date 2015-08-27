@@ -30,7 +30,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $conf->setParamType($name, \Vine\Component\Validator\Validator::TYPE_STR);
         $conf->setParamDefaultValue($name, 'name');
-        $conf->setParamCheckFunc($name, array('\Vine\Component\Http\Validator\Checker', 'strNotNull'));
+        $conf->setParamCheckFunc($name, array('\Vine\Component\Http\Validator\Checker', 'strNotNull'), array("maxLen" => 12, "minLen" => 5));
         $conf->setParamExceptionParams($name, 'app_name不正确', 1003);        
 
         $_GET = array(

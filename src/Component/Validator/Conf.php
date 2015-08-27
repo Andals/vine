@@ -13,15 +13,15 @@ namespace Vine\Component\Validator;
 */
 class Conf
 {
-    const KEY_TYPE            = 'type';
-    const KEY_DEFAULT         = 'default';
-    const KEY_CHECK           = 'check';
-    const KEY_FILTER_EMPTY    = 'filter_empty';
-    const KEY_ERROR           = 'error';
-    const KEY_ERROR_HANDING   = 'handing';
-    const KEY_ERROR_EXCEPTION = 'exception';
-    const KEY_ERROR_ERRNO     = 'errno';
-    const KEY_ERROR_MSG       = 'msg';
+    const KEY_TYPE              = 'type';
+    const KEY_DEFAULT           = 'default';
+    const KEY_CHECK             = 'check';
+    const KEY_CHECK_FUNC        = 'check_func';
+    const KEY_CHECK_EXT_PARAMS  = 'check_ext_params';
+    const KEY_FILTER_EMPTY      = 'filter_empty';
+    const KEY_ERROR             = 'error';
+    const KEY_ERROR_ERRNO       = 'errno';
+    const KEY_ERROR_MSG         = 'msg';
 
     private $paramsConf = array();
 
@@ -75,9 +75,10 @@ class Conf
      * @param Closure $callback 
      * @return self 
      */
-    public function setParamCheckFunc($name, $callback)
+    public function setParamCheckFunc($name, $callback, $ext = array())
     {
-        $this->paramsConf[$name][self::KEY_CHECK] = $callback;
+        $this->paramsConf[$name][self::KEY_CHECK][self::KEY_CHECK_FUNC] = $callback;
+        $this->paramsConf[$name][self::KEY_CHECK][self::KEY_CHECK_EXT_PARAMS] = $ext;
         return $this;
     }
 
@@ -88,7 +89,17 @@ class Conf
      */
     public function getParamCheckFunc($name)
     {
-        return isset($this->paramsConf[$name][self::KEY_CHECK]) ? $this->paramsConf[$name][self::KEY_CHECK] : '';
+        return isset($this->paramsConf[$name][self::KEY_CHECK][self::KEY_CHECK_FUNC]) ? $this->paramsConf[$name][self::KEY_CHECK][self::KEY_CHECK_FUNC] : '';
+    }
+
+    /**
+     * Gets the param check rules
+     * @param  string $name param name
+     * @return array
+     */
+    public function getParamCheckExtParams($name) 
+    {
+         return isset($this->paramsConf[$name][self::KEY_CHECK][self::KEY_CHECK_EXT_PARAMS]) ? $this->paramsConf[$name][self::KEY_CHECK][self::KEY_CHECK_EXT_PARAMS] : array();
     }
 
     /**

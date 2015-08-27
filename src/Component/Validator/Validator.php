@@ -158,9 +158,12 @@ class Validator
                 continue;
             }
 
-            $check = $this->conf->getParamCheckFunc($name);
-            if (is_callable($check)) {
-                if (!call_user_func($check, $value)) {
+            $checkerFunc = $this->conf->getParamCheckFunc($name);
+            $checkerExtParams = $this->conf->getParamCheckExtParams($name);
+            $checkerParams = array_unshift($checkerExtParams, $value);
+
+            if (is_callable($checkerFunc)) {
+                if (!call_user_func_array($checkerFunc, $checkerParams)) {
                     $this->handingParamException($name);
                 }
             }
