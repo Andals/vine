@@ -5,8 +5,10 @@ class Test extends \Vine\Component\Mysql\Entity\Base
 {/*{{{*/
     protected function initColumns()
     {/*{{{*/
-        $this->addColumn('id', 0, array('\Vine\Component\Mysql\Entity\Processor', 'processSimpleInt'));
-        $this->addColumn('name', '', array('\Vine\Component\Mysql\Entity\Processor', 'processSimpleString'), array('max_len' => 20));
+        $this->columns = array(
+            'id'   => 0,
+            'name' => '',
+        );
     }/*}}}*/
 }/*}}}*/
 

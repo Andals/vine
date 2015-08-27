@@ -64,7 +64,7 @@ final class Web extends Base
 
         $actionName = $route->getActionName();
         $controller = $this->getController($this->appName, $moduleName, $route->getControllerName(), $actionName);
-        $controller->setRequest($request)->setView($this->container->getView());
+        $controller->setRequest($request, new \Vine\Component\Validator\Validator())->setView($this->container->getView());
 
         $controller->beforeAction();
         $response = call_user_func_array(array($controller, $actionName), $route->getActionArgs());
@@ -86,7 +86,7 @@ final class Web extends Base
         $controllerName = $this->container->getErrorControllerName();
         $actionName     = $this->container->getErrorActionName();
         $controller     = $this->getController($this->appName, $moduleName, $controllerName, $actionName);
-        $controller->setRequest($request, false)->setView($this->container->getView());
+        $controller->setRequest($request)->setView($this->container->getView());
 
         $controller->beforeAction();
         $response = $controller->$actionName($e);

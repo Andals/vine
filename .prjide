@@ -24,11 +24,6 @@ vine=$PWD in=tool/in.vim {
     ResponseInterface.php
     Url.php
     UrlScript.php
-    Validator=Validator {
-     Checker.php
-     Conf.php
-     Validator.php
-    }
    }
    Log=Log {
     Logger.php
@@ -52,7 +47,6 @@ vine=$PWD in=tool/in.vim {
     }
     Entity=Entity {
      Base.php
-     Processor.php
     }
    }
    Routing=Routing {
@@ -70,6 +64,12 @@ vine=$PWD in=tool/in.vim {
    }
    Tool=Tool {
     Toolbox.php
+   }
+   Validator=Validator {
+    Checker.php
+    Conf.php
+    ParamException.php
+    Validator.php
    }
    View=View {
     Base.php
@@ -97,7 +97,6 @@ vine=$PWD in=tool/in.vim {
    Http=Http {
     RequestTest.php
     ResponseTest.php
-    ValidatorTest.php
    }
    Log=Log {
     LoggerTest.php
@@ -106,6 +105,9 @@ vine=$PWD in=tool/in.vim {
     DaoTest.php
     DriverTest.php
     EntityTest.php
+   }
+   Validator=Validator {
+    ValidatorTest.php
    }
    View=View {
     SimpleTest.php
@@ -128,38 +130,5 @@ vine=$PWD in=tool/in.vim {
   in.vim
   srcindex_cscope.sh
   srcindex_ctags.sh
- }
- vendor=vendor {
-  autoload.php
-  composer=composer {
-   ClassLoader.php
-   autoload_classmap.php
-   autoload_namespaces.php
-   autoload_psr4.php
-   autoload_real.php
-   installed.json
-  }
-  psr=psr {
-   log=log {
-    LICENSE
-    README.md
-    composer.json
-    Psr=Psr {
-     Log=Log {
-      AbstractLogger.php
-      InvalidArgumentException.php
-      LogLevel.php
-      LoggerAwareInterface.php
-      LoggerAwareTrait.php
-      LoggerInterface.php
-      LoggerTrait.php
-      NullLogger.php
-      Test=Test {
-       LoggerInterfaceTest.php
-      }
-     }
-    }
-   }
-  }
  }
 }

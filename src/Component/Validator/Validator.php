@@ -16,7 +16,7 @@ use Vine\Component\Validator\ParamException;
  *
  * @author Liang Chao 
  */
-class Validator 
+class Validator
 {
     const TYPE_STR = 1;
     const TYPE_NUM = 2;
@@ -160,10 +160,10 @@ class Validator
 
             $checkerFunc = $this->conf->getParamCheckFunc($name);
             $checkerExtParams = $this->conf->getParamCheckExtParams($name);
-            $checkerParams = array_unshift($checkerExtParams, $value);
+            array_unshift($checkerExtParams, $value);
 
             if (is_callable($checkerFunc)) {
-                if (!call_user_func_array($checkerFunc, $checkerParams)) {
+                if (!call_user_func_array($checkerFunc, $checkerExtParams)) {
                     $this->handingParamException($name);
                 }
             }

@@ -12,9 +12,19 @@ namespace Vine\Component\Validator;
  */
 class Checker
 {/*{{{*/
-    public static function strNotNull($value)
+    public static function strNotNull($value, $maxLen = 0)
     {
-        return ($value !== '') ? true : false;
+        if ($value == '') {
+            return false;
+        }
+
+        if ($maxLen > 0) {
+            if (strlen($value) > $maxLen) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static function numNotZero($value)
@@ -36,4 +46,9 @@ class Checker
     {
         return is_numeric($value) ? true : false;
     }
+
+    public static function validDateFormat($value)
+    {/*{{{*/
+        return strtotime($value) === false ? false : true;
+    }/*}}}*/
 }/*}}}*/

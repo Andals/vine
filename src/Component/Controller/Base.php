@@ -75,16 +75,15 @@ abstract class Base
      * @param bool $useValidator parse actionParams use validator
      * @return this
      */
-    public function setRequest(\Vine\Component\Http\RequestInterface $request, $useValidator = true)
+    public function setRequest(\Vine\Component\Http\RequestInterface $request, \Vine\Component\Validator\Validator $validator = null)
     {/*{{{*/
         $this->request = $request;
 
-        if ($useValidator) {
+        if (!is_null($validator)) {
             $methodName = 'set'.ucfirst($this->actionName).'ActionParamsConf';
             if (method_exists($this, $methodName)) {
-                $validator = new \Vine\Component\Http\Validator\Validator($this->request);
                 $this->$methodName($validator->getConf());
-                $this->actionParams = $validator->parseRequestParams();
+                $this->actionParams = $validator->filterParams($this->request->getParam());
             }
         }
 

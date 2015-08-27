@@ -17,19 +17,12 @@ abstract class Base
     /**
         * eg:
         *    $columns = array(
-        *        'id'(columnName) => array(
-        *            'value' => 0,
-        *            'func'  => array('\Vine\Component\Mysql\Entity\Processor', 'processSimpleInt'),
-        *            'ext'   => array(),
-        *        ),
-        *        'name'(columnName) => array(
-        *            'value' => '',
-        *            'func'  => array('\Vine\Component\Mysql\Entity\Processor', 'processSimpleString'),
-        *            'ext'   => array('max_len' => 20),
-        *        ),
+        *        'id'(columnName)   => 1(value),
+        *        'name'(columnName) => 'vine'(value),
         *    );
      */
-    protected $columns = array();
+    protected $columns   = array();
+    protected $validator = null;
 
     /**
         * Every entity must init self columns
@@ -44,6 +37,11 @@ abstract class Base
         $this->initColumns();
     }/*}}}*/
 
+    public function setValidator(\Vine\Component\Validator\Validator $validator)
+    {/*{{{*/
+        $this->validator = $validator;
+    }/*}}}*/
+
     /**
         * Set columns values
         *
@@ -55,8 +53,15 @@ abstract class Base
      */
     public function setColumnsValues($item)
     {/*{{{*/
-        foreach ($this->columns as $name => $conf) {
-            $this->columns[$name]['value'] = isset($item[$name]) ? call_user_func($conf['func'], $item[$name], $conf['ext']) : $conf['value'];
+        if (!is_null($this->validator) && method_exists($this, 'setColumnsValidatorConf')) {
+            $this->setColumnsValidatorConf($this->validator->getConf());
+            $this->columns = $this->validator->filterParams($item);
+        } else {
+            foreach ($this->columns as $name => $value) {
+                if (isset($item[$name])) {
+                    $this->columns[$name] = $item[$name];
+                }
+            }
         }
     }/*}}}*/
 
@@ -67,13 +72,7 @@ abstract class Base
      */
     public function toItem()
     {/*{{{*/
-        $item = array();
-
-        foreach ($this->columns as $name => $conf) {
-            $item[$name] = $conf['value'];
-        }
-
-        return $item;
+        return $this->columns;
     }/*}}}*/
 
     /**
@@ -83,25 +82,12 @@ abstract class Base
         *
         * @return array
      */
-    public static function extractItem($item)
+    public static function extractItem($item, \Vine\Component\Validator\Validator $validator = null)
     {/*{{{*/
         $entity = new static();
+        $entity->setValidator($validator);
         $entity->setColumnsValues($item);
 
         return $entity->toItem();
-    }/*}}}*/
-
-
-    protected function addColumn($columnName, $value, $func, $ext = null)
-    {/*{{{*/
-        if (!is_callable($func)) {
-            throw new \Exception("func must be callable");
-        }
-
-        $this->columns[$columnName] = array(
-            'value' => $value,
-            'func'  => $func,
-            'ext'   => $ext,
-        );
     }/*}}}*/
 }/*}}}*/
