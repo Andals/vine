@@ -42,10 +42,12 @@ final class Web extends Base
      */
     public function run($moduleName)
     {/*{{{*/
+        $request = $this->container->getRequest();
+
         try {
-            $response = $this->handleRequest($moduleName);
+            $response = $this->handleRequest($moduleName, $request);
         } catch (\Exception $e) {
-            $response = $this->handleError($moduleName, $e);
+            $response = $this->handleError($moduleName, $request, $e);
         }
 
         $response->send();
@@ -57,49 +59,29 @@ final class Web extends Base
         return new \Vine\Component\Container\Web();
     }/*}}}*/
 
-    private function handleRequest($moduleName)
+    private function handleRequest($moduleName, $request)
     {/*{{{*/
-        $request = $this->container->getRequest();
-        $route   = $this->container->getRouter()->route($request);
+        $route = $this->container->getRouter()->route($request);
 
-        $actionName = $route->getActionName();
-        $controller = $this->getController($this->appName, $moduleName, $route->getControllerName(), $actionName);
-        $controller->setRequest($request, new \Vine\Component\Validator\Validator())->setView($this->container->getView());
+        $controllerName = $route->getControllerName();
+        $actionName     = $route->getActionName();
 
-        $controller->beforeAction();
-        $response = call_user_func_array(array($controller, $actionName), $route->getActionArgs());
-        $controller->afterAction();
+        $controller = $this->getController($this->appName, $moduleName, $controllerName, $actionName);
+        $controller->setRequest($request, new \Vine\Component\Validator\Validator())
+                   ->setView($this->container->getView());
 
-        if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
-            throw new \Vine\Framework\Error\Exception(
-                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
-                'resonse must instanceof \Vine\Component\Http\ResponseInterface'
-            );
-        }
-
-        return $response;
+        return $this->runController($controller, $actionName, $route->getActionArgs());
     }/*}}}*/
-    private function handleError($moduleName, $e)
+    private function handleError($moduleName, $request, $e)
     {/*{{{*/
-        $request = $this->container->getRequest();
-
         $controllerName = $this->container->getErrorControllerName();
         $actionName     = $this->container->getErrorActionName();
-        $controller     = $this->getController($this->appName, $moduleName, $controllerName, $actionName);
-        $controller->setRequest($request)->setView($this->container->getView());
 
-        $controller->beforeAction();
-        $response = $controller->$actionName($e);
-        $controller->afterAction();
+        $controller = $this->getController($this->appName, $moduleName, $controllerName, $actionName);
+        $controller->setRequest($request)
+                   ->setView($this->container->getView());
 
-        if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
-            throw new \Vine\Framework\Error\Exception(
-                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
-                'resonse must instanceof \Vine\Component\Http\ResponseInterface'
-            );
-        }
-
-        return $response;
+        return $this->runController($controller, $actionName, array($e));
     }/*}}}*/
 
     private function initComponents()
@@ -117,19 +99,36 @@ final class Web extends Base
     private function getController($appName, $moduleName, $controllerName, $actionName)
     {/*{{{*/
         $clsName = '\\'.ucfirst($appName).'\Controller\\';
-        $clsName.= ucfirst($moduleName).'\\'.ucfirst($controllerName);
+        $clsName.= ucfirst($moduleName).'\\'.ucfirst($controllerName).'Controller';
         if (!class_exists($clsName)) {
             throw new \Exception("Controller $clsName not exists");
         }
 
         $controller = new $clsName($moduleName, $controllerName, $actionName);
-        if (!$controller instanceof \Vine\Component\Controller\Base) {
-            throw new \Exception($clsName.' must be an instance of \Vine\Component\Controller\Base');
-        }
-        if (!method_exists($controller, $actionName)) {
-            throw new \Exception("Action $actionName not exists");
+        if (!$controller instanceof \Vine\Component\Controller\BaseController) {
+            throw new \Exception($clsName.' must be an instance of \Vine\Component\Controller\BaseController');
         }
 
         return $controller;
+    }/*}}}*/
+    private function runController($controller, $actionName, $actionArgs = array())
+    {/*{{{*/
+        $actionFuncName = lcfirst($actionName).'Action';
+        if (!method_exists($controller, $actionFuncName)) {
+            throw new \Exception("Action $actionName not exists");
+        }
+
+        $controller->beforeAction();
+        $response = call_user_func_array(array($controller, $actionFuncName), $actionArgs);
+        $controller->afterAction();
+
+        if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
+            throw new \Vine\Framework\Error\Exception(
+                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
+                'resonse must instanceof \Vine\Component\Http\ResponseInterface'
+            );
+        }
+
+        return $response;
     }/*}}}*/
 }/*}}}*/

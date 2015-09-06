@@ -1,15 +1,14 @@
 <?php
 /**
-* @file Base.php
+* @file BaseController.php
 * @brief controller base class
 * @author haoyankai
-* @version 1.0
 * @date 2015-07-20
  */
 
 namespace Vine\Component\Controller;
 
-abstract class Base
+abstract class BaseController
 {/*{{{*/
     /**  
      * @var string current module name.
@@ -51,8 +50,8 @@ abstract class Base
     public function __construct($moduleName, $controllerName, $actionName)
     {/*{{{*/
         $this->moduleName     = lcfirst($moduleName);
-        $this->controllerName = $controllerName;
-        $this->actionName     = $actionName;
+        $this->controllerName = lcfirst($controllerName);
+        $this->actionName     = lcfirst($actionName);
     }/*}}}*/
 
     /**
