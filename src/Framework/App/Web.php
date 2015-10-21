@@ -125,7 +125,7 @@ final class Web extends Base
         if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
             throw new \Vine\Framework\Error\Exception(
                 \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
-                'resonse must instanceof \Vine\Component\Http\ResponseInterface'
+                'response must instanceof \Vine\Component\Http\ResponseInterface'
             );
         }
 

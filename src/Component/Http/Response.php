@@ -412,6 +412,9 @@ class Response implements \Vine\Component\Http\ResponseInterface
         header('Content-Type: ' . $contentType); 
 
         foreach($this->headers as $name => $headers) {
+            if (!is_array($headers)) {
+                $headers = array($headers);
+            }
             foreach($headers as $value) {
                 header($name . ': ' . $value, false, $this->statusCode);
             }
