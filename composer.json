@@ -1,5 +1,5 @@
 {
-    "name": "Andals/vine",
+    "name": "andals/vine",
     "autoload": {
         "psr-4": {
             "Vine\\": "src/",
