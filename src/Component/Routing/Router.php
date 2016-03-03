@@ -44,8 +44,8 @@ class Router implements RouterInterface
     {/*{{{*/
         $actionArgs = array();
         foreach ($this->routeTable as $item) {
-            if ($item['rule']->match($request, $actionArgs)) {
-                return $item['route']->setActionArgs($actionArgs);
+            if ($item['rule']->match($request, $item['route'])) {
+                return $item['route'];
             }
         }
 

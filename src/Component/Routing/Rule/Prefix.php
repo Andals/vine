@@ -23,7 +23,7 @@ class Prefix implements RuleInterface
     /**
         * {@inheritdoc}
      */
-    public function match(\Vine\Component\Http\RequestInterface $request, &$actionArgs = array())
+    public function match(\Vine\Component\Http\RequestInterface $request, \Vine\Component\Routing\Route\RouteInterface $route)
     {/*{{{*/
         return strpos($request->getUrlPath(), $this->prefix) !== false ? true : false;
     }/*}}}*/

@@ -27,7 +27,7 @@ final class Web extends Base
     {/*{{{*/
         if (!$bootstrap instanceof \Vine\Framework\Bootstrap\Web) {
             throw new \Vine\Framework\Error\Exception(
-                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
+                \Vine\Framework\Error\Errno::E_SYS_INVALID_INSTANCE,
                 get_class($bootstrap).' must instanceof \Vine\Component\Bootstrap\Web'
             );
         }
@@ -96,26 +96,11 @@ final class Web extends Base
                         ->setErrorActionName('index');
     }/*}}}*/
     
-    private function getController($appName, $moduleName, $controllerName, $actionName)
-    {/*{{{*/
-        $clsName = '\\'.ucfirst($appName).'\Controller\\';
-        $clsName.= ucfirst($moduleName).'\\'.ucfirst($controllerName).'Controller';
-        if (!class_exists($clsName)) {
-            throw new \Exception("Controller $clsName not exists");
-        }
-
-        $controller = new $clsName($moduleName, $controllerName, $actionName);
-        if (!$controller instanceof \Vine\Component\Controller\BaseController) {
-            throw new \Exception($clsName.' must be an instance of \Vine\Component\Controller\BaseController');
-        }
-
-        return $controller;
-    }/*}}}*/
     private function runController($controller, $actionName, $actionArgs = array())
     {/*{{{*/
         $actionFuncName = lcfirst($actionName).'Action';
         if (!method_exists($controller, $actionFuncName)) {
-            throw new \Exception("Action $actionName not exists");
+            throw new \Vine\Framework\Error\Exception(\Vine\Framework\Error\Errno::E_SYS_ACTION_NOT_EXISTS, "Action $actionName not exists");
         }
 
         $controller->beforeAction();
@@ -124,7 +109,7 @@ final class Web extends Base
 
         if (!$response instanceof \Vine\Component\Http\ResponseInterface) {
             throw new \Vine\Framework\Error\Exception(
-                \Vine\Framework\Error\Errno::E_COMMON_INVALID_INSTANCE,
+                \Vine\Framework\Error\Errno::E_SYS_INVALID_INSTANCE,
                 'response must instanceof \Vine\Component\Http\ResponseInterface'
             );
         }

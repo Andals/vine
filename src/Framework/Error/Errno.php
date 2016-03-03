@@ -16,5 +16,7 @@ class Errno
 {/*{{{*/
     const SUCCESS = 0;
 
-    const E_COMMON_INVALID_INSTANCE = 11;
+    const E_SYS_INVALID_INSTANCE      = 11;
+    const E_SYS_CONTROLLER_NOT_EXISTS = 12;
+    const E_SYS_ACTION_NOT_EXISTS     = 13;
 }/*}}}*/

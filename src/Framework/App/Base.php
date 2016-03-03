@@ -47,4 +47,21 @@ abstract class Base
         $this->appName   = $appName;
         $this->container = $this->getContainer();
     }/*}}}*/
+
+
+    protected function getController($appName, $moduleName, $controllerName, $actionName)
+    {/*{{{*/
+        $clsName = '\\'.ucfirst($appName).'\Controller\\';
+        $clsName.= ucfirst($moduleName).'\\'.ucfirst($controllerName).'Controller';
+        if (!class_exists($clsName)) {
+            throw new \Vine\Framework\Error\Exception(\Vine\Framework\Error\Errno::E_SYS_CONTROLLER_NOT_EXISTS, "Controller $clsName not exists");
+        }
+
+        $controller = new $clsName($moduleName, $controllerName, $actionName);
+        if (!$controller instanceof \Vine\Component\Controller\BaseController) {
+            throw new \Vine\Framework\Error\Exception(\Vine\Framework\Error\Errno::E_SYS_INVALID_INSTANCE, $clsName.' must be an instance of \Vine\Component\Controller\BaseController');
+        }
+
+        return $controller;
+    }/*}}}*/
 }/*}}}*/

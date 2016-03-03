@@ -77,16 +77,24 @@ abstract class BaseController
     public function setRequest(\Vine\Component\Http\RequestInterface $request, \Vine\Component\Validator\Validator $validator = null)
     {/*{{{*/
         $this->request = $request;
+        $this->setActionParams($this->request->getParam(), $validator);
 
+        return $this;
+    }/*}}}*/
+
+    public function setActionParams($params, \Vine\Component\Validator\Validator $validator = null)
+    {/*{{{*/
         if (!is_null($validator)) {
             $methodName = 'set'.ucfirst($this->actionName).'ActionParamsConf';
             if (method_exists($this, $methodName)) {
                 $this->$methodName($validator->getConf());
-                $this->actionParams = $validator->filterParams($this->request->getParam());
+                $this->actionParams = $validator->filterParams($params);
+            } else {
+                $this->actionParams = $params;
             }
+        } else {
+            $this->actionParams = $params;
         }
-
-        return $this;
     }/*}}}*/
 
     /**

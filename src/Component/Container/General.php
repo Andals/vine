@@ -11,33 +11,52 @@ namespace Vine\Component\Container;
 /**
     * Store mixed value use key => value
  */
-class General implements ContainerInterface
+class General extends Base
 {/*{{{*/
-    protected $data = array();
+    const KEY_ERROR_CONTROLLER_NAME = 'error_controller_name';
+    const KEY_ERROR_ACTION_NAME     = 'error_action_name';
 
     /**
-        * {@inheritdoc}
+        * Set error controller name
+        *
+        * @param string $controllerName
+        *
+        * @return self
      */
-    public function add($key, $value)
+    public function setErrorControllerName($controllerName)
     {/*{{{*/
-        $this->data[$key] = $value;
-
-        return $this;
+        return $this->add(self::KEY_ERROR_CONTROLLER_NAME, $controllerName);
     }/*}}}*/
 
     /**
-        * {@inheritdoc}
+        * Get error controller name
+        *
+        * @return string
      */
-    public function get($key)
+    public function getErrorControllerName()
     {/*{{{*/
-        return isset($this->data[$key]) ? $this->data[$key] : null;
+        return $this->get(self::KEY_ERROR_CONTROLLER_NAME);
     }/*}}}*/
 
     /**
-        * {@inheritdoc}
+        * Set error action name
+        *
+        * @param string $actionName
+        *
+        * @return self
      */
-    public function have($key)
+    public function setErrorActionName($actionName)
     {/*{{{*/
-        return isset($this->data[$key]) ? true : false;
+        return $this->add(self::KEY_ERROR_ACTION_NAME, $actionName);
+    }/*}}}*/
+
+    /**
+        * Get error action name
+        *
+        * @return string
+     */
+    public function getErrorActionName()
+    {/*{{{*/
+        return $this->get(self::KEY_ERROR_ACTION_NAME);
     }/*}}}*/
 }/*}}}*/

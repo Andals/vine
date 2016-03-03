@@ -13,7 +13,7 @@ namespace Vine\Component\Mysql;
  */
 class Driver
 {/*{{{*/
-	const DEF_CHARSET = 'UTF8';
+	const DEF_CHARSET = 'utf8mb4';
 
     private $dbConf = array();
     private $logger = null;

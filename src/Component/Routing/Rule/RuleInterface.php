@@ -18,9 +18,9 @@ interface RuleInterface
         * Match rule use request
         *
         * @param \Vine\Component\Http\RequestInterface $request
-        * @param array $actionArgs
+        * @param \Vine\Component\Routing\Route\RouteInterface $route
         *
         * @return bool
      */
-    public function match(\Vine\Component\Http\RequestInterface $request, &$actionArgs = array());
+    public function match(\Vine\Component\Http\RequestInterface $request, \Vine\Component\Routing\Route\RouteInterface $route);
 }/*}}}*/

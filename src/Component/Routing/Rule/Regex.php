@@ -23,14 +23,14 @@ class Regex implements RuleInterface
     /**
         * {@inheritdoc}
      */
-    public function match(\Vine\Component\Http\RequestInterface $request, &$actionArgs = array())
+    public function match(\Vine\Component\Http\RequestInterface $request, \Vine\Component\Routing\Route\RouteInterface $route)
     {/*{{{*/
         if (!preg_match($this->regex, $request->getUrlPath(), $matches)) {
             return false;
         }
 
         array_shift($matches);
-        $actionArgs = $matches;
+        $route->setActionArgs($matches);
 
         return true;
     }/*}}}*/
