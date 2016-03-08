@@ -396,10 +396,9 @@ class Response implements \Vine\Component\Http\ResponseInterface
      */
     public function sendHeaders()
     {
-        ob_flush();
-        
         // headers have already been send by the developer
-        if (headers_sent()) {
+        $headersList = headers_list();
+        if (!empty($headersList)) {
             return $this;
         }
 
