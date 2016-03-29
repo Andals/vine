@@ -155,7 +155,7 @@ class Driver
         try {
             $this->initDbh();
         } catch(\PDOException $e) {
-            $logger->warning($e->getMessage());
+            $this->logger->warning($e->getMessage());
 
             if(Error::lostConnection($e)) {
                 $this->initDbh();

@@ -89,7 +89,7 @@ class JsonResponse extends Response
         } 
 
         if (!$this->hasHeader('Content-Type') || $this->getContentType() === 'text/javascript') {
-            $this->setContentType('application/json');
+            $this->setContentType('text/plain');
         }
 
         return $this->setContent($this->data);

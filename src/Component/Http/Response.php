@@ -16,7 +16,7 @@ class Response implements \Vine\Component\Http\ResponseInterface
     protected $contentType = 'text/html';
 
     /** @var string Response charset. */
-    protected $charset;
+    protected $charset = 'utf-8';
 
     /** @var string Response protocol version */
     protected $version;
