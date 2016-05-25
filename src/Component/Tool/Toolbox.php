@@ -251,6 +251,37 @@ class Toolbox
 	}/*}}}*/
 
     /**
+        * Get files from path non-recursively
+        *
+        * @param string $path
+        * @param array $result
+        * @param string $filterStr
+        *
+        * @return
+     */
+    public static function getFilesFromDirNonRecursively($dir, &$result, $filterStr = '')
+    {/*{{{*/
+		if (!is_dir($dir)) {
+			return;
+		}
+        $list = array();
+        $list[] = rtrim($dir, '/');
+        while (count($list)) {
+            $path = array_shift($list);
+            if (is_dir($path)) {
+                $files = scandir($path);
+                foreach ($files as $file) {
+                    if (($file !== '.') && ($file !== '..')) {
+                        $list[] = $path.'/'.$file;
+                    }
+                }
+            } else {
+                $result[] = $filterStr == '' ? $path : str_replace($filterStr, '', $path);
+            }
+        }
+    }/*}}}*/
+
+    /**
         * Get file extension
         *
         * @param string $path
