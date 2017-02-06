@@ -14,13 +14,14 @@ use Vine\Component\Validator\ParamException;
 /**
  * Validate & Filter HTTP Params
  *
- * @author Liang Chao 
+ * @author Liang Chao
  */
 class Validator
 {
-    const TYPE_STR = 1;
-    const TYPE_NUM = 2;
-    const TYPE_ARR = 3;           
+    const TYPE_STR   = 1;
+    const TYPE_NUM   = 2;
+    const TYPE_ARR   = 3;
+    const TYPE_FLOAT = 4;
 
     private $conf;
     private $originParams = array();
@@ -33,7 +34,7 @@ class Validator
 
     /**
      * Gets the validator conf
-     * @return \Vine\Component\Http\Validator\Conf
+     * @return \Vine\Component\Validator\Conf
      */
     public function getConf()
     {
@@ -42,29 +43,29 @@ class Validator
 
     /**
      * Gets the request params
-     * @param  string $key     params key
-     * @param  mixed $default  default value
-     * @return mixed          
+     * @param  string $key params key
+     * @param  mixed $default default value
+     * @return mixed
      */
     private function getParam($key, $default = null)
     {
         return isset($this->originParams[$key]) ? $this->originParams[$key] : $default;
-    }    
+    }
 
     /**
      * Sets the filter conf
-     * @param mixed $conf 
+     * @param mixed $conf
      */
-    public function setOriginParams($conf) 
+    public function setOriginParams($conf)
     {
         $this->originParams = $conf;
     }
 
     /**
      * Gets the string format request params
-     * @param  string $key     params key
+     * @param  string $key params key
      * @param  mixed $default default value
-     * @return mixed          
+     * @return mixed
      */
     private function getStrParam($key, $default = '')
     {
@@ -74,9 +75,9 @@ class Validator
 
     /**
      * Gets the number format request params
-     * @param  string  $key     params key
+     * @param  string $key params key
      * @param  mixed $default default value
-     * @return mixed           
+     * @return mixed
      */
     private function getNumParam($key, $default = 0)
     {
@@ -86,9 +87,9 @@ class Validator
 
     /**
      * Gets the array format request params
-     * @param  string $key     params key
-     * @param  mixed  $default default value
-     * @return mixed          
+     * @param  string $key params key
+     * @param  mixed $default default value
+     * @return mixed
      */
     private function getArrParam($key, $default = array())
     {
@@ -96,10 +97,16 @@ class Validator
         return is_null($value) ? null : $this->fmtArrValue($value);
     }
 
+    private function getFloatParam($key, $default = array())
+    {
+        $value = $this->getParam($key, $default);
+        return is_null($value) ? null : floatval($value);
+    }
+
     /**
      * format the array params
-     * @param  mixed $value 
-     * @return array        
+     * @param  mixed $value
+     * @return array
      */
     private function fmtArrValue($value)
     {
@@ -112,12 +119,12 @@ class Validator
             $value[$k] = $v;
         }
         return $value;
-    }    
+    }
 
     /**
      * parse the params value
      * @param  string $name param name
-     * @return mixed       
+     * @return mixed
      */
     private function parseParamValue($name)
     {
@@ -130,10 +137,12 @@ class Validator
                 return $this->getNumParam($name, $default);
             case self::TYPE_ARR:
                 return $this->getArrParam($name, $default);
+            case self::TYPE_FLOAT:
+                return $this->getFloatParam($name, $default);
             default:
                 return $this->getParam($name, $default);
         }
-    }    
+    }
 
     /**
      * deal the param error handle
@@ -144,7 +153,7 @@ class Validator
         $message = $this->conf->getParamErrorMsg($name);
         $errorno = $this->conf->getParamErrorErrno($name);
         throw new ParamException($message, $errorno);
-    }        
+    }
 
     /**
      * parse the params to filteredParams use conf regular
@@ -158,7 +167,7 @@ class Validator
                 continue;
             }
 
-            $checkerFunc = $this->conf->getParamCheckFunc($name);
+            $checkerFunc      = $this->conf->getParamCheckFunc($name);
             $checkerExtParams = $this->conf->getParamCheckExtParams($name);
             array_unshift($checkerExtParams, $value);
 
@@ -171,14 +180,14 @@ class Validator
         }
 
         return $this->filterParams;
-    }    
+    }
 
     /**
      * Gets the request params
-     * @return array 
+     * @return array
      */
     public function getFilterParams()
     {
         return $this->filterParams;
-    }        
+    }
 }

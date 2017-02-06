@@ -1,21 +1,25 @@
 <?php
 namespace Vine\Test\TestCase\Validator;
 
+use PHPUnit\Framework\TestCase;
+use \Vine\Component\Validator\Validator;
+use \Vine\Component\Http\RequestFactory;
+
 /**
 * Class TestValidator
 */
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
     public function testHttpValidatorSetterDetector()
     {
         $name = 'app_id';
-        $validator = new \Vine\Component\Validator\Validator();
+        $validator = new Validator();
         $conf = $validator->getConf();
-        $conf->setParamType($name, \Vine\Component\Validator\Validator::TYPE_NUM);
+        $conf->setParamType($name, Validator::TYPE_NUM);
         $conf->setParamDefaultValue($name, -1);
         $conf->setParamCheckFunc($name, array('\Vine\Component\Http\Validator\Checker', 'numNotZero'));
         $conf->setParamExceptionParams($name, 'app_id不正确', 1002);
-        $this->assertEquals(\Vine\Component\Validator\Validator::TYPE_NUM, $conf->getParamType($name));
+        $this->assertEquals(Validator::TYPE_NUM, $conf->getParamType($name));
         $this->assertEquals(-1, $conf->getParamDefaultValue($name));
         $this->assertEquals(array('\Vine\Component\Http\Validator\Checker', 'numNotZero'), $conf->getParamCheckFunc($name));
     }
@@ -23,12 +27,12 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testHttpValidatorParseRequestDetector()
     {
         $name = 'app_name';
-        $requestFactory = new \Vine\Component\Http\RequestFactory();
+        $requestFactory = new RequestFactory();
         $request = $requestFactory->make();
-        $validator = new \Vine\Component\Validator\Validator();
+        $validator = new Validator();
         $conf = $validator->getConf();
 
-        $conf->setParamType($name, \Vine\Component\Validator\Validator::TYPE_STR);
+        $conf->setParamType($name, Validator::TYPE_STR);
         $conf->setParamDefaultValue($name, 'name');
         $conf->setParamCheckFunc($name, array('\Vine\Component\Http\Validator\Checker', 'strNotNull'), array("maxLen" => 12, "minLen" => 5));
         $conf->setParamExceptionParams($name, 'app_name不正确', 1003);        

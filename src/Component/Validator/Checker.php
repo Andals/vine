@@ -32,6 +32,11 @@ class Checker
         return ($value !== 0) ? true : false;
     }
 
+    public static function floatNotZero($value)
+    {
+        return ($value !== 0.0) ? true : false;
+    }
+
     public static function arrNotEmpty($value)
     {
         return (is_array($value) && !empty($value)) ? true : false;

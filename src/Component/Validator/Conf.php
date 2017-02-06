@@ -72,7 +72,7 @@ class Conf
     /**
      * Sets the param check func
      * @param string $name     param name
-     * @param callable $callback 
+     * @param callable $callback
      * @return self 
      */
     public function setParamCheckFunc($name, $callback, $ext = array())
