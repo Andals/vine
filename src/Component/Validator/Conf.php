@@ -26,6 +26,11 @@ class Conf
     private $paramsConf = array();
 
     /**
+     * @var BaseFilter
+     */
+    private $paramsFilter = null;
+
+    /**
      * Sets the param type
      * @param string $name param name
      * @param string $type param type
@@ -168,4 +173,13 @@ class Conf
         return array_keys($this->paramsConf);
     }
 
+    public function setParamsFilter(BaseFilter $filter)
+    {
+        $this->paramsFilter = $filter;
+    }
+
+    public function getParamsFilter()
+    {
+        return $this->paramsFilter;
+    }
 }

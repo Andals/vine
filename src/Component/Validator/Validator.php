@@ -24,7 +24,7 @@ class Validator
     const TYPE_FLOAT = 4;
 
     private $conf;
-    private $originParams = array();
+
     private $filterParams = array();
 
     public function __construct()
@@ -39,109 +39,6 @@ class Validator
     public function getConf()
     {
         return $this->conf;
-    }
-
-    /**
-     * Gets the request params
-     * @param  string $key params key
-     * @param  mixed $default default value
-     * @return mixed
-     */
-    private function getParam($key, $default = null)
-    {
-        return isset($this->originParams[$key]) ? $this->originParams[$key] : $default;
-    }
-
-    /**
-     * Sets the filter conf
-     * @param mixed $conf
-     */
-    public function setOriginParams($conf)
-    {
-        $this->originParams = $conf;
-    }
-
-    /**
-     * Gets the string format request params
-     * @param  string $key params key
-     * @param  mixed $default default value
-     * @return mixed
-     */
-    private function getStrParam($key, $default = '')
-    {
-        $value = $this->getParam($key, $default);
-        return is_null($value) ? null : trim($value);
-    }
-
-    /**
-     * Gets the number format request params
-     * @param  string $key params key
-     * @param  mixed $default default value
-     * @return mixed
-     */
-    private function getNumParam($key, $default = 0)
-    {
-        $value = $this->getParam($key, $default);
-        return is_null($value) ? null : intval($value);
-    }
-
-    /**
-     * Gets the array format request params
-     * @param  string $key params key
-     * @param  mixed $default default value
-     * @return mixed
-     */
-    private function getArrParam($key, $default = array())
-    {
-        $value = $this->getParam($key, $default);
-        return is_null($value) ? null : $this->fmtArrValue($value);
-    }
-
-    private function getFloatParam($key, $default = array())
-    {
-        $value = $this->getParam($key, $default);
-        return is_null($value) ? null : floatval($value);
-    }
-
-    /**
-     * format the array params
-     * @param  mixed $value
-     * @return array
-     */
-    private function fmtArrValue($value)
-    {
-        foreach ($value as $k => $v) {
-            if (is_array($v)) {
-                $v = $this->fmtArrValue($v);
-            } else {
-                $v = trim($v);
-            }
-            $value[$k] = $v;
-        }
-        return $value;
-    }
-
-    /**
-     * parse the params value
-     * @param  string $name param name
-     * @return mixed
-     */
-    private function parseParamValue($name)
-    {
-        $default = $this->conf->getParamDefaultValue($name);
-
-        switch ($this->conf->getParamType($name)) {
-            case self::TYPE_STR:
-                return $this->getStrParam($name, $default);
-            case self::TYPE_NUM:
-                return $this->getNumParam($name, $default);
-            case self::TYPE_ARR:
-                return $this->getArrParam($name, $default);
-            case self::TYPE_FLOAT:
-                return $this->getFloatParam($name, $default);
-            default:
-                return $this->getParam($name, $default);
-        }
     }
 
     /**
@@ -160,24 +57,11 @@ class Validator
      */
     public function filterParams($originParams)
     {
-        $this->setOriginParams($originParams);
-        foreach ($this->conf->getParamNames() as $name) {
-            $value = $this->parseParamValue($name);
-            if (is_null($value) && $this->conf->getParamFilterNull($name)) {
-                continue;
-            }
-
-            $checkerFunc      = $this->conf->getParamCheckFunc($name);
-            $checkerExtParams = $this->conf->getParamCheckExtParams($name);
-            array_unshift($checkerExtParams, $value);
-
-            if (is_callable($checkerFunc)) {
-                if (!call_user_func_array($checkerFunc, $checkerExtParams)) {
-                    $this->handingParamException($name);
-                }
-            }
-            $this->filterParams[$name] = $value;
+        $filter = $this->conf->getParamsFilter();
+        if (is_null($filter)) {
+            $filter = new ExceptionFilter();
         }
+        $this->filterParams = $filter->filterParams($this->conf, $originParams);
 
         return $this->filterParams;
     }
