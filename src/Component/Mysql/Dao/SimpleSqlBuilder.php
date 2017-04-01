@@ -242,6 +242,14 @@ class SimpleSqlBuilder
                 $sql = $name.' between ? and ?';
                 $this->bindValues = array_merge($this->bindValues, $value);
                 break;
+            case 'llike' :
+                $sql = $name.' like ?';
+                $this->bindValues[] = '%'.$value;
+                break;
+            case 'rlike' :
+                $sql = $name.' like ?';
+                $this->bindValues[] = $value.'%';
+                break;
             case 'like' :
                 $sql = $name.' like ?';
                 $this->bindValues[] = '%'.$value.'%';

@@ -19,7 +19,7 @@ class Checker
         }
 
         if ($maxLen > 0) {
-            if (strlen($value) > $maxLen) {
+            if (mb_strlen($value, 'UTF-8') > $maxLen) {
                 return false;
             }
         }
