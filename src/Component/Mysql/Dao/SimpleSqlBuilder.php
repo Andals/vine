@@ -67,6 +67,7 @@ class SimpleSqlBuilder
         if (is_array($columnValuesData[0])) {
             foreach ($columnValuesData as $columnValues) {
                 $this->sql.= $this->buildValues($columnValues);
+                $this->sql.= ',';
             }
             $this->sql = rtrim($this->sql, ',');
         } else {
