@@ -16,6 +16,6 @@ class Noop implements FormaterInterface
      */
     public function fmt($level, $message, array $context = array())
     {/*{{{*/
-        return '';
+        return "$message\n";
     }/*}}}*/
 }/*}}}*/
