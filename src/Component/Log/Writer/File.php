@@ -6,7 +6,7 @@
  * @date 2015-08-04
  */
 
-namespace Phpbox\Log\Writer;
+namespace Vine\Component\Log\Writer;
 
 /**
  * Write local file
