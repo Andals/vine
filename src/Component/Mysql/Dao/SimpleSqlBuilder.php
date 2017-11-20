@@ -178,6 +178,55 @@ class SimpleSqlBuilder
     }/*}}}*/
 
     /**
+        * Group by
+        *
+        * @param string $groupBy order by statement
+        * @param boolean $withRollup
+        *
+        * @return SimpleSqlBuilder
+     */
+    public function groupBy($groupBy, $withRollup = false)
+    {/*{{{*/
+        if ('' != $groupBy) {
+            $this->sql.= ' group by '.$groupBy;
+        }
+        if ($withRollup) {
+            $this->sql.= ' with rollup';
+        }
+        return $this;
+    }/*}}}*/
+
+    /**
+        * Having a = 1, and b = 2, and c = 3 ...
+        *
+        * @param array $columnComparisons, eg:
+        *   $columnComparisons = array('a' => '=', 'b' => 'in' ...);
+        *
+        * @param array $columnNamesValues, eg:
+        *   $columnComparisons = array('a' => 1, 'b' => array(2, 3) ...);
+        *
+        * @param string $logic
+        *
+        * @return SimpleSqlBuilder
+     */
+    public function having($columnComparisons, $columnNamesValues, $logic = 'and')
+    {/*{{{*/
+        $sqls = array();
+        foreach ($columnComparisons as $name => $comparison) {
+            if (isset($columnNamesValues[$name])) {
+                $sqls[]= $this->buildComparison($comparison, $name, $columnNamesValues[$name]);
+            }
+        }
+
+        if (!empty($sqls)) {
+            $spr = ' '.$logic.' ';
+            $this->sql.= ' having '.implode($spr, $sqls);
+        }
+
+        return $this;
+    }/*}}}*/
+
+    /**
         * Order by
         *
         * @param string $orderBy order by statement
